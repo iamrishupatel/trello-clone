@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ROUTES from '$constants/routes.constants';
 	import { InputFieldType } from '$enums/Input.enums';
 	import Icon from '@iconify/svelte';
 	import { Button, Input, Label } from 'flowbite-svelte';
@@ -37,7 +38,9 @@
 			</p>
 		</Input>
 
-		<a href="#a" class="ml-auto text-sm text-primary-700 mt-1">Forgot password?</a>
+		<a href={ROUTES.RESET_PASSWORD} class="ml-auto text-sm text-primary-700 mt-1"
+			>Forgot password?</a
+		>
 	</div>
 
 	<Button type="submit">Sign In</Button>
