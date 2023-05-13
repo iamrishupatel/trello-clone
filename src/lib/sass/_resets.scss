@@ -1,0 +1,46 @@
+/* Reset */
+
+:global(*),
+:global(::before),
+:global(::after) {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+:global(html) {
+	font-size: 16px;
+	line-height: 1.5;
+}
+
+:global(body) {
+	color: #333;
+	background-color: #fff;
+}
+
+/* Lists */
+
+:global(ul),
+:global(ol) {
+	list-style: none;
+}
+
+/* Forms */
+
+:global(button),
+:global(input),
+:global(select),
+:global(textarea) {
+	margin: 0;
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+}
+
+/* Images */
+
+:global(img) {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
