@@ -25,8 +25,8 @@
 			"$helpers": ["./src/helpers"],
 			"$helpers/*": ["./src/helpers/*"],
 
-			"$enums": ["src/enums"],
-			"$enums/*": ["src/enums/*"],
+			"$enums": ["./src/enums"],
+			"$enums/*": ["./src/enums/*"],
 
 			"$utils": ["./src/utils"],
 			"$utils/*": ["./src/utils/*"],
@@ -35,7 +35,10 @@
 			"$constants/*": ["./src/constants/*"],
 
 			"$validations": ["./src/validations"],
-			"$validations/*": ["./src/validations/*"]
+			"$validations/*": ["./src/validations/*"],
+
+			"$store": ["./src/lib/store"],
+			"$store/*": ["./src/lib/store/*"]
 		}
 	},
 	"include": [

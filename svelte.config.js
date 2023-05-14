@@ -30,6 +30,7 @@ const config = {
 			$utils: 'src/utils',
 			$constants: 'src/constants',
 			$validations: 'src/validations',
+			$store: 'src/lib/store',
 		},
 	},
 };

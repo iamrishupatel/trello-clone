@@ -1,9 +1,7 @@
-<script>
-	import Navigation from '$components/Navigation/Navigation.component.svelte';
+<script lang="ts">
 	import '../app.postcss';
 </script>
 
-<Navigation />
 <slot />
 
 <style lang="scss">

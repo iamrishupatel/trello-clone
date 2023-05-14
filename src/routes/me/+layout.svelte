@@ -1,6 +1,12 @@
-<div class="wrapper">
-	<slot />
-</div>
+<script>
+	import AuthGuard from '$components/Auth/AuthGuard.component.svelte';
+</script>
+
+<AuthGuard>
+	<div class="wrapper">
+		<slot />
+	</div>
+</AuthGuard>
 
 <style lang="scss">
 	.wrapper {
