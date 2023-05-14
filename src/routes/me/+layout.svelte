@@ -4,7 +4,6 @@
 
 <style lang="scss">
 	.wrapper {
-		width: 100vw;
 		display: grid;
 		place-items: center;
 		min-height: calc(100vh - 4rem);

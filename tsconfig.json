@@ -32,7 +32,10 @@
 			"$utils/*": ["./src/utils/*"],
 
 			"$constants": ["./src/constants"],
-			"$constants/*": ["./src/constants/*"]
+			"$constants/*": ["./src/constants/*"],
+
+			"$validations": ["./src/validations"],
+			"$validations/*": ["./src/validations/*"]
 		}
 	},
 	"include": [

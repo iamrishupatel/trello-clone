@@ -78,6 +78,8 @@
 		"@popperjs/core": "^2.11.7",
 		"classnames": "^2.3.2",
 		"flowbite": "^1.6.5",
-		"flowbite-svelte": "^0.35.1"
+		"flowbite-svelte": "^0.35.1",
+		"svelte-forms-lib": "^2.0.1",
+		"yup": "^1.1.1"
 	}
 }
