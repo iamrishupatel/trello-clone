@@ -24,6 +24,7 @@
 
 <style lang="scss">
 	.form {
+		background-color: #fff;
 		border: 1px solid #bdbdbd;
 		max-width: 480px;
 		padding: 2rem;

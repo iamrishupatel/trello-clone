@@ -29,6 +29,7 @@ const config = {
 			$enums: 'src/enums',
 			$utils: 'src/utils',
 			$constants: 'src/constants',
+			$validations: 'src/validations',
 		},
 	},
 };
