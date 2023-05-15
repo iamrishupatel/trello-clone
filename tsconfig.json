@@ -38,7 +38,10 @@
 			"$validations/*": ["./src/validations/*"],
 
 			"$store": ["./src/lib/store"],
-			"$store/*": ["./src/lib/store/*"]
+			"$store/*": ["./src/lib/store/*"],
+
+			"$api": ["./src/lib/api"],
+			"$api/*": ["./src/lib/api/*"]
 		}
 	},
 	"include": [
@@ -50,7 +53,7 @@
 		"tests/**/*.js",
 		"tests/**/*.ts",
 		"tests/**/*.svelte",
-		"src/stories/ts"
+		".svelte-kit/ambient.d.ts"
 	],
 	"exclude": [
 		"node_modules/**",

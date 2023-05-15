@@ -31,6 +31,7 @@ const config = {
 			$constants: 'src/constants',
 			$validations: 'src/validations',
 			$store: 'src/lib/store',
+			$api: 'src/lib/api',
 		},
 	},
 };

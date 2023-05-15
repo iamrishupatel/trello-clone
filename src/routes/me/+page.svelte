@@ -2,15 +2,9 @@
 	import ROUTES from '$constants/routes.constants';
 	import { Avatar, Button } from 'flowbite-svelte';
 	import ProfileItem from './components/ProfileItem.component.svelte';
+	import { authStore } from '$lib/store';
 
-	const userDetails = {
-		fullname: 'Luna Lovegood',
-		bio: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi doloremque fugiat enim quis itaque iste nulla nisi harum a id iusto consectetur minima dolores illo, rerum cumque. Maxime, excepturi nihil.',
-		phone: '9876543210',
-		email: 'luna@example.com',
-		displayPicture:
-			'https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2080&q=80',
-	};
+	const userDetails = $authStore.userDetails;
 </script>
 
 <main
@@ -33,15 +27,9 @@
 		>
 			<p class="font-semibold md:font-normal w-32 md:w-48 xl:w-96">Photo</p>
 
-			<Avatar
-				alt={userDetails.fullname}
-				border
-				src={userDetails.displayPicture}
-				size="lg"
-				rounded
-			/>
+			<Avatar alt={userDetails.name} border src={userDetails.displayPicture} size="lg" rounded />
 		</section>
-		<ProfileItem fieldName="Name" value={userDetails.fullname} />
+		<ProfileItem fieldName="Name" value={userDetails.name} />
 		<ProfileItem fieldName="Bio" value={userDetails.bio} />
 		<ProfileItem fieldName="Phone" value={userDetails.phone} />
 		<ProfileItem fieldName="Email" value={userDetails.email} />

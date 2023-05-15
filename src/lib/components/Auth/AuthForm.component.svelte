@@ -6,7 +6,7 @@
 	export let description: string;
 </script>
 
-<form class="form border">
+<div class="form border">
 	<AuthHeader {description} {title} />
 
 	<slot />
@@ -20,7 +20,7 @@
 
 		<slot name="footer-link" />
 	</footer>
-</form>
+</div>
 
 <style lang="scss">
 	.form {

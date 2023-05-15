@@ -4,7 +4,7 @@
 	import { Label, Input, Textarea } from 'flowbite-svelte';
 	import { createForm } from 'svelte-forms-lib';
 	import { editProfileValidation } from '$validations';
-	import type { EditProfileValues } from '$types/editProfileForm';
+	import type { EditProfileValues } from '$types/formValues';
 
 	const initialValues: EditProfileValues = {
 		fullname: 'Luna',
