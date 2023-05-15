@@ -16,7 +16,8 @@
 		"lint": "eslint \"src/**/*.{tsx,ts,svelte}\"",
 		"lint:styles": "stylelint \"src/**/*.{svelte,scss}\"",
 		"lint:fix": "prettier --plugin-search-dir . --write . && eslint --fix \"src/**/*.{tsx,ts,svelte}\" && stylelint \"src/**/*.{svelte,scss}\" --fix",
-		"pre-commit": "lint-staged"
+		"pre-commit": "lint-staged",
+		"prepare": "husky install"
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^8.0.0",
@@ -36,7 +37,7 @@
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte": "^2.26.0",
-		"husky": "^8.0.3",
+		"husky": "^8.0.0",
 		"jsdom": "^22.0.0",
 		"lint-staged": "^13.2.2",
 		"node-sass": "^8.0.0",

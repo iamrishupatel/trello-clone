@@ -79,7 +79,7 @@ devDependencies:
     specifier: ^2.26.0
     version: 2.27.2(eslint@8.39.0)(svelte@3.58.0)
   husky:
-    specifier: ^8.0.3
+    specifier: ^8.0.0
     version: 8.0.3
   jsdom:
     specifier: ^22.0.0
