@@ -9,6 +9,7 @@ export const initialAuthStore: AuthState = {
 	isAuthenticated: false,
 	userDetails: null,
 	sessionId: null,
+	authErrorMessage: null,
 };
 
 const storedState = browser && localStorage.getItem('authState');

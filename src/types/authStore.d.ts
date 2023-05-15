@@ -4,6 +4,7 @@ export type AuthState = {
 	authStatus: AuthStatus;
 	userDetails: UserDetails | null;
 	sessionId: string | null;
+	authErrorMessage: string | null;
 };
 
 export type UserDetails = {

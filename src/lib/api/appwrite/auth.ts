@@ -8,6 +8,11 @@ import { AuthStatus } from '$enums/AuthStatus.enums';
 
 export const createAccount = async (values: CreateAccountFormValues): Promise<void> => {
 	try {
+		authStore.set({
+			...initialAuthStore,
+			authStatus: AuthStatus.IN_PROGRESS,
+		});
+
 		// create a new account
 		await account.create(ID.unique(), values.email, values.password, values.name);
 
@@ -40,6 +45,11 @@ export const createAccount = async (values: CreateAccountFormValues): Promise<vo
 
 export async function handleEmailPasswordLogin(values: LoginFormValues): Promise<void> {
 	try {
+		authStore.set({
+			...initialAuthStore,
+			authStatus: AuthStatus.IN_PROGRESS,
+		});
+
 		const session = await account.createEmailSession(values.email, values.password);
 		const userData = await account.get();
 
@@ -58,15 +68,21 @@ export async function handleEmailPasswordLogin(values: LoginFormValues): Promise
 		});
 
 		await goto('/');
-	} catch (e) {
+	} catch (e: any) {
 		console.log(e);
+		authStore.set({
+			...initialAuthStore,
+			authStatus: AuthStatus.FAILED,
+			authErrorMessage: e.message as string,
+		});
 	}
 }
 
 export async function createAnonSession(): Promise<void> {
 	try {
 		authStore.set({
-			authStatus: AuthStatus.IN_PROGRESS,
+			...initialAuthStore,
+			authStatus: AuthStatus.ANON_AUTH_IN_PROGRESS,
 		});
 
 		const anonSession = await account.createAnonymousSession();
@@ -86,8 +102,12 @@ export async function createAnonSession(): Promise<void> {
 		});
 
 		await goto('/');
-	} catch (e) {
-		console.error(e);
+	} catch (e: any) {
+		authStore.set({
+			...initialAuthStore,
+			authStatus: AuthStatus.FAILED,
+			authErrorMessage: e.message,
+		});
 	}
 }
 

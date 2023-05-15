@@ -8,7 +8,7 @@
 </script>
 
 <title>Login | Krello</title>
-<main class="flex items-center justify-center m-auto min-h-screen">
+<main class="flex items-center justify-center m-auto min-h-screen bg-white md:bg-transparent">
 	<AuthForm description={DESCRIPTION} title={TITLE}>
 		<Login />
 		<p slot="footer-link">
