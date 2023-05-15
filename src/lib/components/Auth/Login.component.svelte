@@ -96,7 +96,7 @@
 		color="alternative"
 		type="button"
 		on:click={createAnonSession}
-		disabled={$isSubmitting || $authStore.authStatus === AuthStatus.IN_PROGRESS}
+		disabled={$isSubmitting || $authStore.authStatus === AuthStatus.ANON_AUTH_IN_PROGRESS}
 	>
 		{#if $authStore.authStatus === AuthStatus.ANON_AUTH_IN_PROGRESS}
 			<Spinner class="mr-3" size="4" color="white" />Creating a anonymous session...
