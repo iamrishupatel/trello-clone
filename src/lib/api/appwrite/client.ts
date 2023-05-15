@@ -1,4 +1,4 @@
-import { Client, Account } from 'appwrite';
+import { Client, Account, Databases, Storage } from 'appwrite';
 import { PUBLIC_API_ENDPOINT, PUBLIC_APP_PROJECT_ID } from '$env/static/public';
 
 export const client = new Client()
@@ -6,3 +6,5 @@ export const client = new Client()
 	.setProject(PUBLIC_APP_PROJECT_ID as string); // Your project ID
 
 export const account = new Account(client);
+export const db = new Databases(client);
+export const storage = new Storage(client);

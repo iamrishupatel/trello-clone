@@ -4,9 +4,6 @@ dependencies:
   '@popperjs/core':
     specifier: ^2.11.7
     version: 2.11.7
-  '@tanstack/svelte-query':
-    specifier: ^4.29.7
-    version: 4.29.7(svelte@3.58.0)
   appwrite:
     specifier: ^11.0.0
     version: 11.0.0
@@ -22,6 +19,9 @@ dependencies:
   svelte-forms-lib:
     specifier: ^2.0.1
     version: 2.0.1
+  uuid:
+    specifier: ^9.0.0
+    version: 9.0.0
   yup:
     specifier: ^1.1.1
     version: 1.1.1
@@ -57,6 +57,9 @@ devDependencies:
   '@types/testing-library__jest-dom':
     specifier: ^5.14.5
     version: 5.14.5
+  '@types/uuid':
+    specifier: ^9.0.1
+    version: 9.0.1
   '@typescript-eslint/eslint-plugin':
     specifier: ^5.45.0
     version: 5.59.2(@typescript-eslint/parser@5.59.2)(eslint@8.39.0)(typescript@5.0.4)
@@ -837,19 +840,6 @@ packages:
       - supports-color
     dev: true
 
-  /@tanstack/query-core@4.29.7:
-    resolution: {integrity: sha512-GXG4b5hV2Loir+h2G+RXhJdoZhJLnrBWsuLB2r0qBRyhWuXq9w/dWxzvpP89H0UARlH6Mr9DiVj4SMtpkF/aUA==}
-    dev: false
-
-  /@tanstack/svelte-query@4.29.7(svelte@3.58.0):
-    resolution: {integrity: sha512-+GvOcGEiFZYj91luPcIIVakmDqXkS5tyWlBLf/zg9E9hohq7SiGug9C9DUWwvSBk80JefAOCioja5jrumrPp6Q==}
-    peerDependencies:
-      svelte: ^3.54.0
-    dependencies:
-      '@tanstack/query-core': 4.29.7
-      svelte: 3.58.0
-    dev: false
-
   /@testing-library/dom@8.20.0:
     resolution: {integrity: sha512-d9ULIT+a4EXLX3UU8FBjauG9NnsZHkHztXoIcTsOKoOw030fyjheN9svkTULjJxtYag9DZz5Jz5qkWZDPxTFwA==}
     engines: {node: '>=12'}
@@ -972,6 +962,10 @@ packages:
     resolution: {integrity: sha512-SBwbxYoyPIvxHbeHxTZX2Pe/74F/tX2/D3mMvzabdeJ25bBojfW0TyB8BHrbq/9zaaKICJZjLP+8r6AeZMFCuQ==}
     dependencies:
       '@types/jest': 29.5.1
+    dev: true
+
+  /@types/uuid@9.0.1:
+    resolution: {integrity: sha512-rFT3ak0/2trgvp4yYZo5iKFEPsET7vKydKF+VRCxlQ9bpheehyAJH89dAkaLEq/j/RZXJIqcgsmPJKUP1Z28HA==}
     dev: true
 
   /@types/yargs-parser@21.0.0:
@@ -5268,6 +5262,11 @@ packages:
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
+
+  /uuid@9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
+    dev: false
 
   /v8-compile-cache@2.3.0:
     resolution: {integrity: sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==}

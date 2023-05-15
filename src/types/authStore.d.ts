@@ -14,4 +14,5 @@ export type UserDetails = {
 	phone: string;
 	email: string;
 	displayPicture: string;
+	username: string;
 };

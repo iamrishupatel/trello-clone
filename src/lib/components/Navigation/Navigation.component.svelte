@@ -18,10 +18,17 @@
 	import { getNavType } from '$utils/getNavType.utils';
 	import { handleSignout } from '$api/appwrite/auth';
 	import { authStore } from '$lib/store';
+	import type { AuthState } from '$types/authStore';
+	import { onDestroy } from 'svelte';
 
 	$: navType = getNavType($page.route.id as string);
 
-	const displayPicture = $authStore.userDetails.displayPicture;
+	let displayPictureURL: string;
+	const unsubscribe = authStore.subscribe((authStore: AuthState) => {
+		displayPictureURL = authStore.userDetails?.displayPicture ?? '';
+	});
+
+	onDestroy(unsubscribe);
 
 	const boardName = 'Some really really long board name';
 
@@ -77,7 +84,7 @@
 
 	<div>
 		<div class="flex items-center md:order-2 gap-x-2 cursor-pointer" id="avatar-menu">
-			<Avatar size="md" src={displayPicture} rounded border />
+			<Avatar size="md" src={displayPictureURL} rounded border />
 			<p class="truncate hidden md:flexs max-w-[140px]">{$authStore.userDetails.name}</p>
 			<Icon icon="mdi:caret-down" />
 		</div>

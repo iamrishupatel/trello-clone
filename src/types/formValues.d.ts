@@ -10,9 +10,10 @@ export type LoginFormValues = {
 };
 
 export type EditProfileValues = {
-	fullname: string;
+	id: string;
+	name: string;
 	bio: string;
 	phone: string;
 	email: string;
-	displayPicture: string;
+	displayPicture: null | File;
 };

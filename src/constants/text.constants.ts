@@ -15,6 +15,8 @@ const TEXT = {
 
 	ACCESS_RESTRICTION_MESSAGE:
 		'Sorry, this page is only accessible to registered users. 😔 Please sign up or log in to continue. 🔐',
+	ANON_USER_BIO:
+		'Welcome to our platform! You are currently browsing as a guest user, which means that you can access certain features and content on our site, but you are not currently logged in with a registered account.',
 };
 
 export default TEXT;
