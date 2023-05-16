@@ -6,6 +6,7 @@ import { authStore } from '$lib/store';
 import type { AuthState, UserDetails } from '$types/authStore';
 import { goto } from '$app/navigation';
 import ROUTES from '$constants/routes.constants';
+import toast from 'svelte-french-toast';
 
 export const updateUserDetails = async (values: EditProfileValues): Promise<void> => {
 	let pictureURL = '';
@@ -47,7 +48,9 @@ export const updateUserDetails = async (values: EditProfileValues): Promise<void
 			};
 		});
 		await goto(ROUTES.MY_PROFILE);
-	} catch (e) {
+		toast.success('Profile updated successfully');
+	} catch (e: any) {
+		toast.error(e.message);
 		console.log(e);
 	}
 };

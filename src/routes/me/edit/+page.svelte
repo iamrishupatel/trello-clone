@@ -9,7 +9,10 @@
 	import Icon from '@iconify/svelte';
 	import { redirect } from '@sveltejs/kit';
 
+	let authDetails: AuthState | null;
+
 	authStore.subscribe((auth: AuthState) => {
+		authDetails = auth;
 		if (auth.isAnonymous && browser) {
 			goto(ROUTES.HOME);
 		} else if (auth.isAnonymous) {
@@ -17,6 +20,8 @@
 		}
 	});
 </script>
+
+<title>{`${authDetails?.userDetails?.name ?? 'Profile'} | Krello`}</title>
 
 <main class="flex flex-col min-h-[720px] w-full md:w-10/12 lg:w-8/12 bg-white md:bg-transparent">
 	<a href={ROUTES.MY_PROFILE} class="flex items-center gap-x-2 px-4 md:px-0">

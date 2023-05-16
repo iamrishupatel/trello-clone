@@ -28,6 +28,7 @@
 	};
 </script>
 
+<title>{`${authDetails?.userDetails?.name ?? 'Profile'} | Krello`}</title>
 <main
 	class="flex flex-col items-center min-h-[720px] w-full md:w-10/12 lg:w-8/12 bg-white md:bg-transparent"
 >

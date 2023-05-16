@@ -8,6 +8,7 @@
 	import { Toast } from 'flowbite-svelte';
 	import { slide } from 'svelte/transition';
 	import { onDestroy } from 'svelte';
+	import { Toaster } from 'svelte-french-toast';
 
 	let authErr: string | null;
 	let showToast = false;
@@ -54,6 +55,10 @@
 		{authErr}
 	</Toast>
 {/if}
+
+<!-- ^ ABOVE LOGIC COULD BE REMOVED -->
+<!-- TOASTER FOR NOTIFICATIONS -->
+<Toaster />
 
 <style lang="scss">
 	@use '$lib/sass/global.scss';

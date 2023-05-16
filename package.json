@@ -83,6 +83,7 @@
 		"flowbite": "^1.6.5",
 		"flowbite-svelte": "^0.35.1",
 		"svelte-forms-lib": "^2.0.1",
+		"svelte-french-toast": "1.0.4-beta.0",
 		"uuid": "^9.0.0",
 		"yup": "^1.1.1"
 	}
