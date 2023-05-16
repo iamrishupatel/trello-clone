@@ -1,18 +1,34 @@
 <script lang="ts">
 	import ROUTES from '$constants/routes.constants';
-	import { Avatar, Button } from 'flowbite-svelte';
+	import { Avatar, Button, Modal } from 'flowbite-svelte';
 	import ProfileItem from './components/ProfileItem.component.svelte';
+	import { authStore } from '$lib/store';
+	import { goto } from '$app/navigation';
+	import type { AuthState } from '$types/authStore';
+	import { onDestroy } from 'svelte';
+	import TEXT from '$constants/text.constants';
 
-	const userDetails = {
-		fullname: 'Luna Lovegood',
-		bio: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi doloremque fugiat enim quis itaque iste nulla nisi harum a id iusto consectetur minima dolores illo, rerum cumque. Maxime, excepturi nihil.',
-		phone: '9876543210',
-		email: 'luna@example.com',
-		displayPicture:
-			'https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2080&q=80',
+	const userDetails = $authStore.userDetails;
+	let showModal = false;
+
+	let authDetails: AuthState | null;
+	const unsubscribe = authStore.subscribe((authState: AuthState) => {
+		authDetails = authState;
+	});
+
+	onDestroy(unsubscribe);
+
+	const goToEditPage = async (): Promise<void> => {
+		if (authDetails && authDetails.isAnonymous) {
+			showModal = true;
+			return;
+		}
+		// if user is not anonymous
+		await goto(ROUTES.EDIT_PROFILE);
 	};
 </script>
 
+<title>{`${authDetails?.userDetails?.name ?? 'Profile'} | Krello`}</title>
 <main
 	class="flex flex-col items-center min-h-[720px] w-full md:w-10/12 lg:w-8/12 bg-white md:bg-transparent"
 >
@@ -25,7 +41,7 @@
 				<h3 class="mb-2 text-xl md:text-3xl">Profile</h3>
 				<p class="text-sm max-w-[200px] md:max-w-fit">Some info may be visible to other people</p>
 			</div>
-			<Button color="light" href={ROUTES.EDIT_PROFILE}>Edit</Button>
+			<Button color="light" on:click={goToEditPage}>Edit</Button>
 		</header>
 
 		<section
@@ -33,17 +49,35 @@
 		>
 			<p class="font-semibold md:font-normal w-32 md:w-48 xl:w-96">Photo</p>
 
-			<Avatar
-				alt={userDetails.fullname}
-				border
-				src={userDetails.displayPicture}
-				size="lg"
-				rounded
-			/>
+			<Avatar alt={userDetails.name} border src={userDetails.displayPicture} size="lg" rounded />
 		</section>
-		<ProfileItem fieldName="Name" value={userDetails.fullname} />
+		<ProfileItem fieldName="Name" value={userDetails.name} />
 		<ProfileItem fieldName="Bio" value={userDetails.bio} />
 		<ProfileItem fieldName="Phone" value={userDetails.phone} />
 		<ProfileItem fieldName="Email" value={userDetails.email} />
 	</section>
 </main>
+
+<!--  -->
+<Modal bind:open={showModal} size="xs" autoclose>
+	<div class="text-center">
+		<svg
+			aria-hidden="true"
+			class="mx-auto mb-4 w-14 h-14 text-gray-400 dark:text-gray-200"
+			fill="none"
+			stroke="currentColor"
+			viewBox="0 0 24 24"
+			xmlns="http://www.w3.org/2000/svg"
+			><path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="2"
+				d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+			/></svg
+		>
+		<p class="mb-5 font-normal text-gray-500 dark:text-gray-400">
+			{TEXT.ACCESS_RESTRICTION_MESSAGE}
+		</p>
+		<Button>Go Back</Button>
+	</div>
+</Modal>

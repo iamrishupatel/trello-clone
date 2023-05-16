@@ -16,15 +16,28 @@
 	import { Banner } from 'flowbite-svelte';
 	import { page } from '$app/stores';
 	import { getNavType } from '$utils/getNavType.utils';
+	import { handleSignout } from '$api/appwrite/auth';
+	import { authStore } from '$lib/store';
+	import type { AuthState } from '$types/authStore';
+	import { onDestroy } from 'svelte';
 
 	$: navType = getNavType($page.route.id as string);
 
-	const displayPicture =
-		'https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2080&q=80';
-	const fullName = 'Luna Lovegood';
+	let displayPictureURL: string;
+	const unsubscribe = authStore.subscribe((authStore: AuthState) => {
+		displayPictureURL = authStore.userDetails?.displayPicture ?? '';
+	});
+
+	onDestroy(unsubscribe);
+
 	const boardName = 'Some really really long board name';
+
 	const handleSearch = (e: Event): void => {
 		console.log(e);
+	};
+
+	const signout = (): void => {
+		handleSignout($authStore.sessionId);
 	};
 </script>
 
@@ -71,8 +84,8 @@
 
 	<div>
 		<div class="flex items-center md:order-2 gap-x-2 cursor-pointer" id="avatar-menu">
-			<Avatar size="md" src={displayPicture} rounded />
-			<p class="truncate hidden md:flexs max-w-[140px]">{fullName}</p>
+			<Avatar size="md" src={displayPictureURL} rounded border />
+			<p class="truncate hidden md:flexs max-w-[140px]">{$authStore.userDetails.name}</p>
 			<Icon icon="mdi:caret-down" />
 		</div>
 		<Dropdown
@@ -89,7 +102,7 @@
 					</p>
 				</DropdownItem>
 				<DropdownDivider />
-				<DropdownItem class="cursor-pointer rounded-lg">
+				<DropdownItem class="cursor-pointer rounded-lg" on:click={signout}>
 					<p class="flex items-center gap-x-2 text-red-600">
 						<Icon icon="ic:baseline-log-out" />
 						Sign out

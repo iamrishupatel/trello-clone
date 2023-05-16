@@ -4,23 +4,25 @@
 	import { Label, Input, Textarea } from 'flowbite-svelte';
 	import { createForm } from 'svelte-forms-lib';
 	import { editProfileValidation } from '$validations';
-	import type { EditProfileValues } from '$types/editProfileForm';
+	import type { EditProfileValues } from '$types/formValues';
+	import { authStore } from '$lib/store';
+	import { updateUserDetails } from '$api/appwrite/userDetails.api';
 
 	const initialValues: EditProfileValues = {
-		fullname: 'Luna',
-		bio: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi doloremque fugiat enim quis itaque iste nulla nisi harum a id iusto consectetur minima dolores illo, rerum cumque. Maxime, excepturi nihil.',
-		phone: '9876543210',
-		email: 'luna@example.com',
-		displayPicture:
-			'https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2080&q=80',
+		bio: $authStore.userDetails.bio,
+		displayPicture: null,
+		email: $authStore.userDetails.email,
+		name: $authStore.userDetails.name,
+		phone: $authStore.userDetails.phone,
+		id: $authStore.userDetails.id,
 	};
+
+	$: avatarSrc = $authStore.userDetails.displayPicture;
 
 	const { form, errors, isSubmitting, handleChange, handleSubmit } = createForm({
 		initialValues,
 		validationSchema: editProfileValidation,
-		onSubmit: async (_values) => {
-			//
-		},
+		onSubmit: updateUserDetails,
 	});
 
 	const handleFileChange = (e: any): void => {
@@ -29,12 +31,14 @@
 		if (file) {
 			const reader = new FileReader();
 			reader.addEventListener('load', function () {
-				form.set({
-					...$form,
-					displayPicture: reader.result?.toString() as string,
-				});
+				avatarSrc = reader.result?.toString() as string;
 			});
 			reader.readAsDataURL(file);
+
+			form.set({
+				...$form,
+				displayPicture: file,
+			});
 		}
 	};
 </script>
@@ -43,7 +47,7 @@
 	<div>
 		<Label for="photo" class="mb-2">Photo</Label>
 		<div class="flex items-center gap-x-8">
-			<Avatar alt={$form.fullname} border src={$form.displayPicture} size="lg" rounded id="photo" />
+			<Avatar alt={$form.name} border src={avatarSrc} size="lg" rounded id="photo" />
 			<div>
 				<Fileupload class="mb-2" name="displayPicture" size="sm" on:change={handleFileChange} />
 			</div>
@@ -55,21 +59,24 @@
 		<Input
 			type="text"
 			id="name"
-			name="fullname"
+			name="name"
 			placeholder="Enter your name"
-			bind:value={$form.fullname}
+			bind:value={$form.name}
 			on:change={handleChange}
-			color={$errors.fullname ? 'red' : 'base'}
+			color={$errors.name ? 'red' : 'base'}
 		>
 			<Icon slot="left" icon="mdi:user" />
 		</Input>
-		{#if $errors.fullname}
-			<Helper class="mt-2" color="red"><span class="font-medium">{$errors.fullname}</span></Helper>
+		{#if $errors.name}
+			<Helper class="mt-2" color="red"><span class="font-medium">{$errors.name}</span></Helper>
 		{/if}
 	</div>
 
 	<div>
-		<Label for="bio" class="mb-1">Bio</Label>
+		<Label for="bio" class="mb-1">
+			Bio
+			<span class="text-xs">(max 256 character)</span>
+		</Label>
 		<Textarea
 			type="text"
 			rows="5"
@@ -97,9 +104,14 @@
 			bind:value={$form.phone}
 			on:change={handleChange}
 			color={$errors.phone ? 'red' : 'base'}
+			disabled
 		>
 			<Icon slot="left" icon="material-symbols:phone-android-outline-rounded" />
 		</Input>
+		<Helper class="mt-2"
+			><span class="font-medium">Disabled for sometime. Will be enabled later</span></Helper
+		>
+
 		{#if $errors.phone}
 			<Helper class="mt-2" color="red"><span class="font-medium">{$errors.phone}</span></Helper>
 		{/if}
