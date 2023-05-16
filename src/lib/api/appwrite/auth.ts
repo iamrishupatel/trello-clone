@@ -24,7 +24,8 @@ export const createAccount = async (values: CreateAccountFormValues): Promise<vo
 		const userId = uuidv4();
 
 		// create a new account
-		await account.create(userId, values.email, values.password, values.name);
+		const res = await account.create(userId, values.email, values.password, values.name);
+		console.log('RES', res);
 
 		// account created successfully
 		// add the user to db
@@ -63,8 +64,22 @@ export const createAccount = async (values: CreateAccountFormValues): Promise<vo
 		});
 
 		await goto(ROUTES.HOME);
-	} catch (e) {
-		console.log(e);
+	} catch (e: any) {
+		// handle user already exists error
+
+		if (e.type === 'user_already_exists') {
+			authStore.set({
+				...initialAuthStore,
+				authStatus: AuthStatus.FAILED,
+				authErrorMessage: TEXT.ERROR_MESSAGES.USER_ALREADY_EXISTS,
+			});
+		} else {
+			authStore.set({
+				...initialAuthStore,
+				authStatus: AuthStatus.FAILED,
+				authErrorMessage: e.message,
+			});
+		}
 	}
 };
 
