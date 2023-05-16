@@ -24,8 +24,7 @@ export const createAccount = async (values: CreateAccountFormValues): Promise<vo
 		const userId = uuidv4();
 
 		// create a new account
-		const res = await account.create(userId, values.email, values.password, values.name);
-		console.log('RES', res);
+		await account.create(userId, values.email, values.password, values.name);
 
 		// account created successfully
 		// add the user to db

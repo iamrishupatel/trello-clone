@@ -24,6 +24,3 @@ authStore.subscribe((value) => {
 });
 
 export default authStore;
-
-// HELPERS TO MUTATE THE STORE
-// TODO: to add here
