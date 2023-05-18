@@ -11,6 +11,7 @@ export type Board = {
 	name: string;
 	owner: string;
 	members: Array<BoardMember>;
+	isPrivate: boolean;
 };
 
 export type BoardMember = {
