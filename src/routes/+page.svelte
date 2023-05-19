@@ -1,18 +1,32 @@
 <script lang="ts">
 	import AuthGuard from '$components/Auth/AuthGuard.component.svelte';
 	import CreateBoard from '$components/CreateBoard.component.svelte';
-	import Card from '$components/common/Card.component.svelte';
+	import Card from '$components/common/Card/Card.component.svelte';
 	import { Button } from 'flowbite-svelte';
 	import type { PageData } from './$types';
+	import boardStore from '$lib/store/boards.store';
+	import { authStore } from '$lib/store';
+	import type { AuthState, UserDetails } from '$types/authStore';
 
 	export let data: PageData;
-	let { boards } = data;
+	let boards = data.boards;
 
 	let isModalOpen = false;
 
 	const openModel = (): void => {
 		isModalOpen = true;
 	};
+
+	let userDetail: UserDetails | null;
+
+	boardStore.subscribe((boardsData) => {
+		boards = boardsData.boards;
+		isModalOpen = boardsData.isCreateBoardModalOpen;
+	});
+
+	authStore.subscribe((auth: AuthState) => {
+		userDetail = auth.userDetails;
+	});
 </script>
 
 <title>All Boards | Krello</title>
@@ -27,7 +41,12 @@
 
 			<section class="cards mt-8">
 				{#each boards as board}
-					<Card cardTitle={board.name} thumbnailURL={board.coverURL} />
+					<Card
+						cardTitle={board.name}
+						thumbnailURL={board.coverURL}
+						users={board.members}
+						showOwnerBadge={board.owner === userDetail?.id}
+					/>
 				{/each}
 			</section>
 		</div>

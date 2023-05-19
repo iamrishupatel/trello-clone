@@ -11,7 +11,7 @@
 
 	const initialValues: NewBoardFormData = {
 		file: '',
-		boardName: '',
+		name: '',
 		isPrivate: false,
 		owner: $authStore.userDetails.id,
 	};
@@ -21,25 +21,29 @@
 		isModalOpen = false;
 	};
 
-	const { form, errors, isSubmitting, handleChange, handleSubmit } = createForm({
+	const { form, errors, isSubmitting, handleChange, handleSubmit, handleReset } = createForm({
 		initialValues,
 		validationSchema: newBoardFormSchema,
-		onSubmit: createNewBoard,
+		onSubmit: (values): Promise<void> => createNewBoard(values, handleReset),
 	});
 
 	// IMAGE PREVIEW SRC
 	let src = '';
 
+	// make src reactive to file so when form resets
+	// src will be reseted as well
+	$: {
+		if ($form.file) {
+			src = URL.createObjectURL($form.file);
+		} else {
+			src = '';
+		}
+	}
+
 	const handleFileChange = (e: any): void => {
 		const file = e.target?.files[0];
 
 		if (file) {
-			const reader = new FileReader();
-			reader.addEventListener('load', function () {
-				src = reader.result?.toString() as string;
-			});
-			reader.readAsDataURL(file);
-
 			form.set({
 				...$form,
 				file: file,
@@ -48,7 +52,6 @@
 	};
 
 	const removeCover = (): void => {
-		src = '';
 		form.update((prevState: NewBoardFormData) => ({ ...prevState, file: '' }));
 	};
 </script>
@@ -81,21 +84,19 @@
 		</div>
 
 		<div>
-			<Label for="boardName" class="block mb-2 sr-only">Board Name</Label>
+			<Label for="name" class="block mb-2 sr-only">Board Name</Label>
 			<Input
-				id="boardName"
+				id="name"
 				type="text"
-				placeholder="Enter a board title"
-				bind:value={$form.boardName}
+				placeholder="Enter your board name"
+				bind:value={$form.name}
 				on:change={handleChange}
-				color={$errors.boardName ? 'red' : 'base'}
+				color={$errors.name ? 'red' : 'base'}
 			>
 				<Icon icon="mdi:rename-box" slot="left" />
 			</Input>
-			{#if $errors.boardName}
-				<Helper class="mt-2" color="red"
-					><span class="font-medium">{$errors.boardName}</span></Helper
-				>
+			{#if $errors.name}
+				<Helper class="mt-2" color="red"><span class="font-medium">{$errors.name}</span></Helper>
 			{/if}
 		</div>
 
