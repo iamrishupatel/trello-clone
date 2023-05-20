@@ -1,3 +1,5 @@
+import type { CardLabel } from './card';
+
 export type NewBoardFormData = {
 	file: File | '';
 	name: string;
@@ -12,6 +14,7 @@ export type Board = {
 	owner: string;
 	members: Array<BoardMember>;
 	isPrivate: boolean;
+	labels?: CardLabel[];
 };
 
 export type BoardMember = {

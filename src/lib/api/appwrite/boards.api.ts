@@ -5,6 +5,8 @@ import APPWRITE_CONST from '$constants/appwrite.constants';
 import { Query } from 'appwrite';
 import boardStore from '$lib/store/boards.store';
 import toast from 'svelte-french-toast';
+import { authStore } from '$lib/store';
+import type { AuthState, UserDetails } from '$types/authStore';
 
 type CreateNewBoard = (
 	data: NewBoardFormData,
@@ -121,6 +123,12 @@ export const getAllBoards = async (userId: string): Promise<Board[]> => {
 };
 
 const populateMemberDataInBoard = async (board: any): Promise<Board> => {
+	let user: UserDetails | null = null;
+
+	authStore.subscribe((authStore: AuthState) => {
+		user = authStore.userDetails;
+	});
+
 	const boardData: Board = {
 		id: board.$id,
 		coverURL: board.coverURL,
@@ -128,7 +136,24 @@ const populateMemberDataInBoard = async (board: any): Promise<Board> => {
 		owner: board.owner,
 		members: [],
 		isPrivate: board.isPrivate,
+		labels: [],
 	};
+
+	boardData.labels?.push({
+		color: board.isPrivate ? 'red' : 'green',
+		id: '1',
+		text: board.isPrivate ? 'Private Board' : 'Public Board',
+	});
+
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	if (user && board.owner === user.id) {
+		boardData.labels?.push({
+			color: 'indigo',
+			id: 'my-board',
+			text: 'My Board',
+		});
+	}
 
 	try {
 		const membersListWithTheirData = await Promise.all(

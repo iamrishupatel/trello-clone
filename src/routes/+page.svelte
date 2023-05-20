@@ -5,8 +5,6 @@
 	import { Button } from 'flowbite-svelte';
 	import type { PageData } from './$types';
 	import boardStore from '$lib/store/boards.store';
-	import { authStore } from '$lib/store';
-	import type { AuthState, UserDetails } from '$types/authStore';
 
 	export let data: PageData;
 	let boards = data.boards;
@@ -17,15 +15,9 @@
 		isModalOpen = true;
 	};
 
-	let userDetail: UserDetails | null;
-
 	boardStore.subscribe((boardsData) => {
 		boards = boardsData.boards;
 		isModalOpen = boardsData.isCreateBoardModalOpen;
-	});
-
-	authStore.subscribe((auth: AuthState) => {
-		userDetail = auth.userDetails;
 	});
 </script>
 
@@ -45,7 +37,7 @@
 						cardTitle={board.name}
 						thumbnailURL={board.coverURL}
 						users={board.members}
-						showOwnerBadge={board.owner === userDetail?.id}
+						labels={board.labels}
 					/>
 				{/each}
 			</section>

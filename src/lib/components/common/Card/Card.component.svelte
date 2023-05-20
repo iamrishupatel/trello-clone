@@ -1,18 +1,12 @@
 <script lang="ts">
-	type Label = {
-		text: string;
-		id: string;
-		color: string;
-	};
-
 	import { Badge } from 'flowbite-svelte';
 	import CardAvatars from './CardAvatars.component.svelte';
+	import type { CardLabel, CardUserData } from '$types/card';
 
 	export let cardTitle = '';
-	export let labels: Label[] = [];
+	export let labels: CardLabel[] = [];
 	export let thumbnailURL = '';
-	export let users: any = [];
-	export let showOwnerBadge = false;
+	export let users: CardUserData[] = [];
 </script>
 
 <article class="my-card p-4 shadow flex flex-col gap-y-4 rounded-xl w-80 my-8">
@@ -28,24 +22,20 @@
 		</h5>
 	{/if}
 
-	{#if showOwnerBadge}
-		<div>
-			<Badge>Your Board</Badge>
-		</div>
-	{/if}
-
 	<!-- LABELS -->
 	{#if labels.length}
 		<div class="flex gap-2 flex-wrap">
 			{#each labels as label}
-				<Badge>{label.text}</Badge>
+				<Badge color={label.color}>{label.text}</Badge>
 			{/each}
 		</div>
 	{/if}
 
-	<div class="pl-4">
-		<CardAvatars {users} />
-	</div>
+	{#if users.length > 0}
+		<div class="pl-4">
+			<CardAvatars {users} />
+		</div>
+	{/if}
 </article>
 
 <style lang="scss">

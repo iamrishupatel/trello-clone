@@ -1,8 +1,9 @@
 <script lang="ts">
+	import type { CardUserData } from '$types/card';
 	import { Avatar } from 'flowbite-svelte';
 
-	export let users: any[] = [];
-	$: maxUsers = users.slice(0, 5);
+	export let users: CardUserData[] = [];
+	$: maxUsers = users.slice(0, 4);
 </script>
 
 <div class="flex items-center">
@@ -14,9 +15,10 @@
 			class="border border-primary-700"
 		/>
 	{/each}
+
 	{#if Math.max(users.length - maxUsers.length)}
-		<div class="ml-4">
+		<p class="ml-4 text-slate-600 text-xs">
 			+{Math.max(users.length - maxUsers.length)} others
-		</div>
+		</p>
 	{/if}
 </div>
