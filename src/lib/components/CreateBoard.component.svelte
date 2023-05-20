@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createNewBoard } from '$lib/api/appwrite/boards.api';
 	import { authStore } from '$lib/store';
+	import type { AuthState } from '$types/authStore';
 	import type { NewBoardFormData } from '$types/board';
 	import newBoardFormSchema from '$validations/newBoardForm.validation';
 	import Icon from '@iconify/svelte';
@@ -8,6 +9,12 @@
 	import { createForm } from 'svelte-forms-lib';
 
 	export let isModalOpen = false;
+
+	let isAnonymous: boolean;
+
+	authStore.subscribe((auth: AuthState) => {
+		isAnonymous = auth.isAnonymous;
+	});
 
 	const initialValues: NewBoardFormData = {
 		file: '',
@@ -24,7 +31,7 @@
 	const { form, errors, isSubmitting, handleChange, handleSubmit, handleReset } = createForm({
 		initialValues,
 		validationSchema: newBoardFormSchema,
-		onSubmit: (values): Promise<void> => createNewBoard(values, handleReset),
+		onSubmit: (values): Promise<void> => createNewBoard(values, isAnonymous, handleReset),
 	});
 
 	// IMAGE PREVIEW SRC
@@ -106,9 +113,14 @@
 				name="isPrivate"
 				id="isPrivate"
 				bind:checked={$form.isPrivate}
-				on:change={handleChange}>Private Board</Toggle
+				on:change={handleChange}
+				bind:disabled={isAnonymous}>Private Board</Toggle
 			>
-			<Helper class="mt-2">By default all board are public</Helper>
+			<Helper class="mt-2">
+				{isAnonymous
+					? 'Anonymous users can\'t create private boards'
+					: 'By default all board are public'}
+			</Helper>
 		</div>
 
 		<div class="ml-auto flex gap-x-4">

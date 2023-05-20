@@ -6,9 +6,13 @@ import { Query } from 'appwrite';
 import boardStore from '$lib/store/boards.store';
 import toast from 'svelte-french-toast';
 
-type CreateNewBoard = (data: NewBoardFormData, hanldeFormReset: () => void) => Promise<void>;
+type CreateNewBoard = (
+	data: NewBoardFormData,
+	isAnonymous: boolean,
+	hanldeFormReset: () => void,
+) => Promise<void>;
 
-export const createNewBoard: CreateNewBoard = async (data, hanldeFormReset) => {
+export const createNewBoard: CreateNewBoard = async (data, isAnonymous, hanldeFormReset) => {
 	// TODO: once the appwrite cloud starts using v.1.3.x IMPLEMENT RELATIONS
 
 	try {
@@ -24,9 +28,9 @@ export const createNewBoard: CreateNewBoard = async (data, hanldeFormReset) => {
 
 		const boardCreationPayload: BoardCreationPayload = {
 			name: data.name,
-			owner: data.owner,
-			isPrivate: data.isPrivate,
-			members: [data.owner],
+			owner: isAnonymous ? '' : data.owner,
+			isPrivate: isAnonymous ? false : data.isPrivate,
+			members: isAnonymous ? [] : [data.owner],
 			...(coverURL && { coverURL }),
 		};
 
@@ -39,14 +43,21 @@ export const createNewBoard: CreateNewBoard = async (data, hanldeFormReset) => {
 		);
 
 		// add the board in the current users boards
-		const userDoc = await db.updateDocument(
-			APPWRITE_CONST.KRELLO_DB_ID,
-			APPWRITE_CONST.USER_COLLECTION_ID,
-			data.owner,
-			{
-				myBoards: [boardDoc.$id],
-			},
-		);
+		// if the user is not anonymous
+		let userDoc;
+		if (!isAnonymous) {
+			userDoc = await db.updateDocument(
+				APPWRITE_CONST.KRELLO_DB_ID,
+				APPWRITE_CONST.USER_COLLECTION_ID,
+				data.owner,
+				{
+					myBoards: [boardDoc.$id],
+				},
+			);
+		}
+
+		console.log(boardDoc);
+		console.log(boardDoc.coverURL);
 
 		// update the store with new board
 		const newBoard: Board = {
@@ -54,16 +65,18 @@ export const createNewBoard: CreateNewBoard = async (data, hanldeFormReset) => {
 			coverURL: boardDoc.coverURL,
 			name: boardDoc.name,
 			owner: boardDoc.owner,
-			members: [
-				{
-					name: userDoc.name,
-					displayPicture: userDoc.displayPicture,
-					email: userDoc.email,
-					id: userDoc.$id,
-				},
-			],
+			members: [],
 			isPrivate: boardDoc.isPrivate,
 		};
+
+		if (!isAnonymous && userDoc) {
+			newBoard.members.push({
+				name: userDoc.name,
+				displayPicture: userDoc.displayPicture,
+				email: userDoc.email,
+				id: userDoc.$id,
+			});
+		}
 
 		// update the board
 		boardStore.update((prevState) => ({
@@ -102,15 +115,9 @@ export const getAllBoards = async (userId: string): Promise<Board[]> => {
 		return item.members.includes(userId) || !item.isPrivate;
 	});
 
-	// return filteredDocs;
 	// POPULATE THE USER DATA IN MEMBER
 	// realations pending...
-
-	// add user info filtered data
-	const final = await Promise.all(filteredDocs.map(populateMemberDataInBoard));
-	console.table(final);
-
-	return final;
+	return await Promise.all(filteredDocs.map(populateMemberDataInBoard));
 };
 
 const populateMemberDataInBoard = async (board: any): Promise<Board> => {
