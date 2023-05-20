@@ -89,7 +89,7 @@
 			<Icon icon="mdi:caret-down" />
 		</div>
 		<Dropdown
-			class="border border-2 w-[150px] rounded-lg"
+			class="border w-[150px] rounded-lg"
 			frameClass="rounded-lg"
 			placement="bottom"
 			triggeredBy="#avatar-menu"
