@@ -5,6 +5,7 @@
 	import { Button } from 'flowbite-svelte';
 	import type { PageData } from './$types';
 	import boardStore from '$lib/store/boards.store';
+	import Masonry from '$components/Layouts/Masonry.component.svelte';
 
 	export let data: PageData;
 	let boards = data.boards;
@@ -31,15 +32,19 @@
 				<Button on:click={openModel}>New</Button>
 			</header>
 
-			<section class="cards mt-8">
-				{#each boards as board}
-					<Card
-						cardTitle={board.name}
-						thumbnailURL={board.coverURL}
-						users={board.members}
-						labels={board.labels}
-					/>
-				{/each}
+			<section class="mt-8">
+				<Masonry gridGap={'1rem'} colWidth={'minmax(Min(22rem, 100%), 1fr)'} items={boards}>
+					{#each boards as board}
+						<div>
+							<Card
+								cardTitle={board.name}
+								thumbnailURL={board.coverURL}
+								users={board.members}
+								labels={board.labels}
+							/>
+						</div>
+					{/each}
+				</Masonry>
 			</section>
 		</div>
 
@@ -47,15 +52,3 @@
 		<CreateBoard bind:isModalOpen />
 	</main>
 </AuthGuard>
-
-<style lang="scss">
-	.cards {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
-		justify-items: center;
-
-		@media screen and (max-width: 350px) {
-			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-		}
-	}
-</style>

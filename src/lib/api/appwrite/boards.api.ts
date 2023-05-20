@@ -69,6 +69,7 @@ export const createNewBoard: CreateNewBoard = async (data, isAnonymous, hanldeFo
 			owner: boardDoc.owner,
 			members: [],
 			isPrivate: boardDoc.isPrivate,
+			labels: [],
 		};
 
 		if (!isAnonymous && userDoc) {
@@ -78,7 +79,19 @@ export const createNewBoard: CreateNewBoard = async (data, isAnonymous, hanldeFo
 				email: userDoc.email,
 				id: userDoc.$id,
 			});
+			newBoard.labels?.push({
+				color: 'indigo',
+				id: 'my-board',
+				text: 'My Board',
+			});
 		}
+
+		// add labels
+		newBoard.labels?.push({
+			color: boardDoc.isPrivate ? 'red' : 'green',
+			id: '1',
+			text: boardDoc.isPrivate ? 'Private Board' : 'Public Board',
+		});
 
 		// update the board
 		boardStore.update((prevState) => ({

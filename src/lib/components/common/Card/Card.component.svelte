@@ -9,7 +9,7 @@
 	export let users: CardUserData[] = [];
 </script>
 
-<article class="my-card p-4 shadow flex flex-col gap-y-4 rounded-xl w-80 my-8">
+<article class="p-4 shadow flex flex-col gap-y-4 rounded-xl w-80">
 	<!-- IMAGE -->
 	{#if thumbnailURL}
 		<img src={thumbnailURL} alt="" class="h-48 w-full rounded-xl object-cover" />
@@ -31,7 +31,7 @@
 		</div>
 	{/if}
 
-	{#if users.length > 0}
+	{#if users?.length > 0}
 		<div class="pl-4">
 			<CardAvatars {users} />
 		</div>
