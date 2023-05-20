@@ -17,3 +17,8 @@ export type EditProfileValues = {
 	email: string;
 	displayPicture: null | File;
 };
+
+export type BoardDescriptionFormValues = {
+	id: string;
+	description: string;
+};

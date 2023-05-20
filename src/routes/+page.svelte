@@ -41,6 +41,7 @@
 								thumbnailURL={board.coverURL}
 								users={board.members}
 								labels={board.labels}
+								href={`/board/${board.id}`}
 							/>
 						</div>
 					{/each}

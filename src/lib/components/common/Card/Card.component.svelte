@@ -7,6 +7,7 @@
 	export let labels: CardLabel[] = [];
 	export let thumbnailURL = '';
 	export let users: CardUserData[] = [];
+	export let href = '';
 </script>
 
 <article class="p-4 shadow flex flex-col gap-y-4 rounded-xl w-80">
@@ -18,7 +19,13 @@
 	<!-- TITLE -->
 	{#if cardTitle}
 		<h5 class="textxl font-bold tracking-tight text-gray-900 dark:text-white break-all">
-			{cardTitle}
+			{#if href}
+				<a {href}>
+					{cardTitle}
+				</a>
+			{:else}
+				{cardTitle}
+			{/if}
 		</h5>
 	{/if}
 
