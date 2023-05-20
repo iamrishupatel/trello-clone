@@ -7,6 +7,98 @@ import boardStore from '$lib/store/boards.store';
 import toast from 'svelte-french-toast';
 import { authStore } from '$lib/store';
 import type { AuthState, UserDetails } from '$types/authStore';
+import type { BoardDescriptionFormValues } from '$types/formValues';
+
+const uploadBoardCover = async (file: File): Promise<string> => {
+	const fileId = uuidv4();
+	await storage.createFile(APPWRITE_CONST.BOARDS_BUCKET_ID, fileId, file);
+
+	const result = storage.getFilePreview(APPWRITE_CONST.BOARDS_BUCKET_ID, fileId);
+
+	return result.href;
+};
+
+const populateMemberDataInBoard = async (board: any): Promise<Board> => {
+	let user: UserDetails | null = null;
+
+	authStore.subscribe((authStore: AuthState) => {
+		user = authStore.userDetails;
+	});
+
+	const boardData: Board = {
+		id: board.$id,
+		coverURL: board.coverURL,
+		name: board.name,
+		owner: board.owner,
+		members: [],
+		isPrivate: board.isPrivate,
+		labels: [],
+		description: board.description ?? '',
+		createdAt: board.$createdAt,
+	};
+
+	boardData.labels?.push({
+		color: board.isPrivate ? 'red' : 'green',
+		id: '1',
+		text: board.isPrivate ? 'Private Board' : 'Public Board',
+	});
+
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	if (user && board.owner === user.id) {
+		boardData.labels?.push({
+			color: 'indigo',
+			id: 'my-board',
+			text: 'My Board',
+		});
+	}
+
+	try {
+		const membersListWithTheirData = await Promise.all(
+			board.members.map(async (member: string) => {
+				const [isAnon, memberData] = await getBoardMemberData(member);
+				return isAnon ? null : memberData;
+			}),
+		);
+
+		boardData.members = membersListWithTheirData.filter((mem) => {
+			if (mem) return true;
+			return false;
+		}) as BoardMember[];
+	} catch (e) {
+		console.error(e);
+	}
+
+	return boardData;
+};
+
+const getBoardMemberData = async (userId: string): Promise<[boolean, BoardMember | null]> => {
+	let memberData: BoardMember;
+	try {
+		const { $id, name, email, displayPicture } = await db.getDocument(
+			APPWRITE_CONST.KRELLO_DB_ID,
+			APPWRITE_CONST.USER_COLLECTION_ID,
+			userId, // user id is same as doc id
+			[Query.select(['name', 'email', 'displayPicture'])],
+		);
+
+		memberData = {
+			id: $id,
+			name,
+			email,
+			displayPicture,
+		};
+
+		return [false, memberData];
+	} catch (e) {
+		console.log(e);
+		// If the member doc is not found
+		// i.e. the member is anonymous user
+		return [true, null];
+	}
+};
+
+// ----------------------------------------------------------------
 
 type CreateNewBoard = (
 	data: NewBoardFormData,
@@ -34,6 +126,7 @@ export const createNewBoard: CreateNewBoard = async (data, isAnonymous, hanldeFo
 			isPrivate: isAnonymous ? false : data.isPrivate,
 			members: isAnonymous ? [] : [data.owner],
 			...(coverURL && { coverURL }),
+			description: '',
 		};
 
 		// Create a new board document
@@ -70,6 +163,8 @@ export const createNewBoard: CreateNewBoard = async (data, isAnonymous, hanldeFo
 			members: [],
 			isPrivate: boardDoc.isPrivate,
 			labels: [],
+			description: '',
+			createdAt: boardDoc.$createdAt,
 		};
 
 		if (!isAnonymous && userDoc) {
@@ -135,90 +230,22 @@ export const getAllBoards = async (userId: string): Promise<Board[]> => {
 	return await Promise.all(filteredDocs.map(populateMemberDataInBoard));
 };
 
-const populateMemberDataInBoard = async (board: any): Promise<Board> => {
-	let user: UserDetails | null = null;
-
-	authStore.subscribe((authStore: AuthState) => {
-		user = authStore.userDetails;
-	});
-
-	const boardData: Board = {
-		id: board.$id,
-		coverURL: board.coverURL,
-		name: board.name,
-		owner: board.owner,
-		members: [],
-		isPrivate: board.isPrivate,
-		labels: [],
-	};
-
-	boardData.labels?.push({
-		color: board.isPrivate ? 'red' : 'green',
-		id: '1',
-		text: board.isPrivate ? 'Private Board' : 'Public Board',
-	});
-
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
-	if (user && board.owner === user.id) {
-		boardData.labels?.push({
-			color: 'indigo',
-			id: 'my-board',
-			text: 'My Board',
-		});
-	}
-
+export const getBoardData = async (boardId: string): Promise<Board> => {
+	let boardData;
 	try {
-		const membersListWithTheirData = await Promise.all(
-			board.members.map(async (member: string) => {
-				const [isAnon, memberData] = await getBoardMemberData(member);
-				return isAnon ? null : memberData;
-			}),
+		const boardDoc = await db.getDocument(
+			APPWRITE_CONST.KRELLO_DB_ID,
+			APPWRITE_CONST.BOARDS_COLLECTION_ID,
+			boardId,
 		);
 
-		boardData.members = membersListWithTheirData.filter((mem) => {
-			if (mem) return true;
-			return false;
-		}) as BoardMember[];
+		boardData = await populateMemberDataInBoard(boardDoc);
 	} catch (e) {
 		console.error(e);
 	}
-
-	return boardData;
+	return boardData as Board;
 };
 
-const getBoardMemberData = async (userId: string): Promise<[boolean, BoardMember | null]> => {
-	let memberData: BoardMember;
-	try {
-		const { $id, name, email, displayPicture } = await db.getDocument(
-			APPWRITE_CONST.KRELLO_DB_ID,
-			APPWRITE_CONST.USER_COLLECTION_ID,
-			userId, // user id is same as doc id
-			[Query.select(['name', 'email', 'displayPicture'])],
-		);
-
-		memberData = {
-			id: $id,
-			name,
-			email,
-			displayPicture,
-		};
-
-		return [false, memberData];
-	} catch (e) {
-		console.log(e);
-		// If the member doc is not found
-		// i.e. the member is anonymous user
-		return [true, null];
-	}
-};
-
-// INTERNAL HELPERS
-const uploadBoardCover = async (file: File): Promise<string> => {
-	const fileId = uuidv4();
-	await storage.createFile(APPWRITE_CONST.BOARDS_BUCKET_ID, fileId, file);
-
-	const result = storage.getFilePreview(APPWRITE_CONST.BOARDS_BUCKET_ID, fileId);
-
-	return result.href;
+export const updateBoardDescription = async (values: BoardDescriptionFormValues): Promise<void> => {
+	console.log('update int...', values);
 };

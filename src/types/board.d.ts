@@ -15,6 +15,8 @@ export type Board = {
 	members: Array<BoardMember>;
 	isPrivate: boolean;
 	labels?: CardLabel[];
+	description: string;
+	createdAt: string;
 };
 
 export type BoardMember = {
@@ -27,6 +29,7 @@ export type BoardMember = {
 export type BoardStore = {
 	boards: Board[];
 	isCreateBoardModalOpen: boolean;
+	currentBoard: Board | null;
 };
 
 export type BoardCreationPayload = {
@@ -35,4 +38,5 @@ export type BoardCreationPayload = {
 	owner: string;
 	isPrivate: boolean;
 	coverURL?: string;
+	description: string;
 };

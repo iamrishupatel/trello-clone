@@ -82,8 +82,10 @@
 		"classnames": "^2.3.2",
 		"flowbite": "^1.6.5",
 		"flowbite-svelte": "^0.35.1",
+		"moment": "^2.29.4",
 		"svelte-forms-lib": "^2.0.1",
 		"svelte-french-toast": "1.0.4-beta.0",
+		"svelte-markdown": "^0.2.3",
 		"uuid": "^9.0.0",
 		"yup": "^1.1.1"
 	}
