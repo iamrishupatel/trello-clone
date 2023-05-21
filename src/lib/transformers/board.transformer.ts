@@ -1,3 +1,4 @@
+import { ANON_USER_DATA } from '$constants/app.constans';
 import { authStore } from '$lib/store';
 import type { AuthState, UserDetails } from '$types/authStore';
 import type { Board } from '$types/board';
@@ -17,7 +18,7 @@ export const enhanceBoardData = (board: any, bulkUsers: User[]): Board => {
 		id: board.$id,
 		coverURL: board.coverURL,
 		name: board.name,
-		owner: board.owner,
+		owner: bulkUsers.find((user) => user.id === board.owner) ?? ANON_USER_DATA,
 		members: [],
 		isPrivate: board.isPrivate,
 		labels: [],
