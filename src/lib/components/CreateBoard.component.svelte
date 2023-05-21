@@ -21,6 +21,7 @@
 		name: '',
 		isPrivate: false,
 		owner: $authStore.userDetails.id,
+		email: $authStore.userDetails.email,
 	};
 
 	const handleCancel = (): void => {
