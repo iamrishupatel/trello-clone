@@ -12,7 +12,7 @@
 	export let data: PageData;
 
 	let boardData: Board;
-	let boardDataLoading = true;
+	let isboardDataLoading = true;
 	let isMenuClosed = true;
 
 	onMount(async () => {
@@ -23,7 +23,7 @@
 			// HANDLE ERROR
 			console.error(e);
 		} finally {
-			boardDataLoading = false;
+			isboardDataLoading = false;
 		}
 	});
 
@@ -43,9 +43,11 @@
 </script>
 
 <AuthGuard>
-	<main class=" flex flex-col container mx-auto px-2 sm:px-0">
-		{#if boardDataLoading}
-			<Spinner />
+	<main class="flex flex-col container mx-auto px-2 sm:px-0">
+		{#if isboardDataLoading}
+			<div class="min-h-screen flex items-center justify-center -mt-20">
+				<Spinner currentFill="#ef562f" />
+			</div>
 		{:else}
 			<header class="flex my-4 gap-x-4">
 				<Button color="light">{boardData.isPrivate ? 'Private' : 'Public'}</Button>
