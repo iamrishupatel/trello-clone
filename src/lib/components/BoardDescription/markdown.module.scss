@@ -1,0 +1,87 @@
+.markdown {
+	/* Heading Elements */
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-weight: bold;
+		line-height: 1.2;
+	}
+
+	/* Paragraph */
+	p {
+		margin: 1em 0;
+	}
+
+	/* Links */
+	a {
+		color: blue;
+		text-decoration: underline;
+	}
+
+	/* Lists */
+	ul,
+	ol {
+		margin: 1em 0;
+		padding-left: 2em;
+		list-style: disc;
+	}
+
+	ol {
+		list-style: decimal;
+	}
+
+	/* Images */
+	img {
+		max-width: 100%;
+		height: auto;
+	}
+
+	/* Tables */
+	table {
+		border-collapse: collapse;
+	}
+
+	th,
+	td {
+		border: 1px solid black;
+		padding: 0.5em;
+	}
+
+	/* Form Elements */
+	input,
+	textarea {
+		display: inline-block;
+		margin: 0.5em 0;
+	}
+
+	button,
+	input[type='submit'] {
+		padding: 0.5em 1em;
+	}
+
+	/* Default Box Model */
+
+	box-sizing: border-box;
+
+	/* Code Block Styles */
+	pre {
+		background-color: #f1f1f1;
+		padding: 1em;
+		overflow: auto;
+		font-family: Consolas, Monaco, 'Andale Mono', monospace;
+		font-size: 14px;
+	}
+
+	code {
+		display: inline-block;
+		color: #333;
+	}
+
+	/* Syntax Highlighting */
+	code[class*='language-'] {
+		color: #333;
+	}
+}

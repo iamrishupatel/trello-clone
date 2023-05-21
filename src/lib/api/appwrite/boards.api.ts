@@ -1,4 +1,10 @@
-import type { Board, BoardCreationPayload, BoardMember, NewBoardFormData } from '$types/board';
+import type {
+	Board,
+	BoardCreationPayload,
+	BoardMember,
+	BoardStore,
+	NewBoardFormData,
+} from '$types/board';
 import { db, storage } from './client';
 import { v4 as uuidv4 } from 'uuid';
 import APPWRITE_CONST from '$constants/appwrite.constants';
@@ -8,6 +14,7 @@ import toast from 'svelte-french-toast';
 import { authStore } from '$lib/store';
 import type { AuthState, UserDetails } from '$types/authStore';
 import type { BoardDescriptionFormValues } from '$types/formValues';
+import TEXT from '$constants/text.constants';
 
 const uploadBoardCover = async (file: File): Promise<string> => {
 	const fileId = uuidv4();
@@ -65,6 +72,19 @@ const populateMemberDataInBoard = async (board: any): Promise<Board> => {
 			if (mem) return true;
 			return false;
 		}) as BoardMember[];
+
+		// add owner information
+		const [isAnon, userData] = await getBoardMemberData(board.owner);
+		if (!isAnon && userData) {
+			boardData.owner = userData;
+		} else if (isAnon) {
+			boardData.owner = {
+				name: 'Anonymous',
+				email: '',
+				id: board.owner,
+				displayPicture: '',
+			};
+		}
 	} catch (e) {
 		console.error(e);
 	}
@@ -126,7 +146,7 @@ export const createNewBoard: CreateNewBoard = async (data, isAnonymous, hanldeFo
 			isPrivate: isAnonymous ? false : data.isPrivate,
 			members: isAnonymous ? [] : [data.owner],
 			...(coverURL && { coverURL }),
-			description: '',
+			description: TEXT.DEFAULT_BOARD_DESCRIPTION,
 		};
 
 		// Create a new board document
@@ -150,9 +170,6 @@ export const createNewBoard: CreateNewBoard = async (data, isAnonymous, hanldeFo
 				},
 			);
 		}
-
-		console.log(boardDoc);
-		console.log(boardDoc.coverURL);
 
 		// update the store with new board
 		const newBoard: Board = {
@@ -216,7 +233,7 @@ export const getAllBoards = async (userId: string): Promise<Board[]> => {
 	const { documents } = await db.listDocuments(
 		APPWRITE_CONST.KRELLO_DB_ID,
 		APPWRITE_CONST.BOARDS_COLLECTION_ID,
-		[Query.orderDesc('$createdAt')],
+		[Query.orderDesc('$createdAt'), Query.limit(40)],
 	);
 
 	// STEP 2. filter the boards
@@ -247,5 +264,33 @@ export const getBoardData = async (boardId: string): Promise<Board> => {
 };
 
 export const updateBoardDescription = async (values: BoardDescriptionFormValues): Promise<void> => {
-	console.log('update int...', values);
+	const { description, id } = values;
+	try {
+		const updatedDoc = await db.updateDocument(
+			APPWRITE_CONST.KRELLO_DB_ID,
+			APPWRITE_CONST.BOARDS_COLLECTION_ID,
+			id,
+			{
+				description,
+			},
+		);
+
+		// update the board store
+		boardStore.update((prevStore: BoardStore) => {
+			if (prevStore.currentBoard) {
+				return {
+					...prevStore,
+					currentBoard: {
+						...prevStore.currentBoard,
+						description: updatedDoc.description,
+					},
+				};
+			}
+			return prevStore;
+		});
+		toast.success('Descriptions updated successfully');
+	} catch (e: any) {
+		toast.error(e.message);
+		console.log(e);
+	}
 };

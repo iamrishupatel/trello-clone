@@ -6,7 +6,7 @@
 	import { getBoardData } from '$lib/api/appwrite/boards.api';
 	import type { Board } from '$types/board';
 	import { sineIn } from 'svelte/easing';
-	import BoardDescription from '$components/BoardDescription.component.svelte';
+	import BoardDescription from '$components/BoardDescription/BoardDescription.component.svelte';
 	import boardStore from '$lib/store/boards.store';
 
 	export let data: PageData;
