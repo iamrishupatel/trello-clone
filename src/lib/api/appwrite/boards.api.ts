@@ -66,6 +66,7 @@ export const createNewBoard: CreateNewBoardFunc = async (data, isAnonymous, hanl
 				data.owner,
 				{
 					myBoards: [boardDoc.$id],
+					email: data.email,
 				},
 			);
 		}
