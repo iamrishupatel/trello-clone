@@ -21,6 +21,5 @@ export const load = (async ({ params }): Promise<ReturnType> => {
 		};
 	} catch (e) {
 		throw error(404, 'No Board Found');
-		console.error(e);
 	}
 }) satisfies PageLoad;

@@ -37,6 +37,7 @@ export const createAccount = async (values: CreateAccountFormValues): Promise<vo
 				displayPicture: '',
 				username: values.email.split('@')[0],
 				bio: '',
+				email: values.email,
 			},
 		);
 

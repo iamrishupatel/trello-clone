@@ -1,3 +1,4 @@
+import { DEFAULT_BOARDS_PAGINATION_LIMIT } from '$constants/app.constans';
 import { getAllBoards } from '$lib/api/appwrite/boards.api';
 import { authStore } from '$lib/store';
 import boardStore from '$lib/store/boards.store';
@@ -20,7 +21,7 @@ async function loadPageData(): Promise<ReturnType> {
 	});
 
 	try {
-		boards = await getAllBoards(userId);
+		boards = await getAllBoards(userId, '', DEFAULT_BOARDS_PAGINATION_LIMIT);
 		boardStore.update((prevState) => ({
 			...prevState,
 			boards: boards,
