@@ -1,4 +1,5 @@
 import type { CardLabel } from './card';
+import type { User } from './user';
 
 export type NewBoardFormData = {
 	file: File | '';
@@ -19,12 +20,7 @@ export type Board = {
 	createdAt: string;
 };
 
-export type BoardMember = {
-	name: string;
-	displayPicture: string;
-	email: string;
-	id: string;
-};
+export type BoardMember = User;
 
 export type BoardStore = {
 	boards: Board[];
@@ -40,3 +36,11 @@ export type BoardCreationPayload = {
 	coverURL?: string;
 	description: string;
 };
+
+export type CreateNewBoardFunc = (
+	data: NewBoardFormData,
+	isAnonymous: boolean,
+	hanldeFormReset: () => void,
+) => Promise<void>;
+
+export type GetAllBoardFun = (userId: string, lastId?: string, limit?: number) => Promise<Board[]>;
