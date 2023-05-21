@@ -1,9 +1,19 @@
 <script lang="ts">
-	import TEXT from '$constants/text.constants';
+	import styles from './markdown.module.scss';
 	import boardStore from '$lib/store/boards.store';
 	import type { Board, BoardStore } from '$types/board';
 	import Icon from '@iconify/svelte';
-	import { Avatar, Button, CloseButton, Helper, Label, Textarea } from 'flowbite-svelte';
+	import {
+		Avatar,
+		Badge,
+		Button,
+		CloseButton,
+		Helper,
+		Label,
+		Spinner,
+		Textarea,
+		Tooltip,
+	} from 'flowbite-svelte';
 	import { onDestroy } from 'svelte';
 	import { createForm } from 'svelte-forms-lib';
 	import SvelteMarkdown from 'svelte-markdown';
@@ -11,6 +21,7 @@
 	import type { BoardDescriptionFormValues } from '$types/formValues';
 	import { updateBoardDescription } from '$lib/api/appwrite/boards.api';
 	import boardDescriptionFormSchema from '$validations/updateBoard.validations';
+	import { authStore } from '$lib/store';
 
 	export let isMenuClosed: boolean;
 
@@ -26,12 +37,15 @@
 
 	let initialValues: BoardDescriptionFormValues = {
 		id: $boardStore.currentBoard?.id ?? '',
-		description: TEXT.DEFAULT_BOARD_DESCRIPTION,
+		description: $boardStore.currentBoard?.description ?? '',
 	};
 
-	const { form, errors, handleChange, handleSubmit, handleReset } = createForm({
+	const { form, errors, isSubmitting, handleChange, handleSubmit } = createForm({
 		initialValues,
-		onSubmit: updateBoardDescription,
+		onSubmit: async (values) => {
+			await updateBoardDescription(values);
+			isEditing = false;
+		},
 		validationSchema: boardDescriptionFormSchema,
 	});
 
@@ -46,8 +60,9 @@
 	};
 
 	const handleCancel = (): void => {
-		handleReset();
-		isEditing = true;
+		// handleReset();
+		form.update((prev) => ({ ...prev, description: $boardStore.currentBoard?.description ?? '' }));
+		isEditing = false;
 	};
 </script>
 
@@ -57,8 +72,11 @@
 			id="drawer-label"
 			class="inline-flex items-center text-base font-semibold text-gray-500 capitalize"
 		>
-			{board.name}
+			<span>
+				{board.name}
+			</span>
 		</h5>
+		<Badge class="ml-4" color="yellow">{board.isPrivate ? 'Private Board' : 'Public Board'}</Badge>
 		<CloseButton on:click={handleCloseMenu} class="mb-4 dark:text-white" />
 	</div>
 
@@ -69,9 +87,9 @@
 	</p>
 
 	<div class="flex gap-x-4">
-		<Avatar src={''} rounded border />
+		<Avatar src={board.owner.displayPicture} rounded />
 		<div>
-			<p><strong>PENDING</strong></p>
+			<p><strong>{board.owner.name}</strong></p>
 			<p class="text-xs text-gray-500">
 				on {moment(board.createdAt).format('DD MMMM, YYYY')}
 			</p>
@@ -84,12 +102,19 @@
 		<p class="flex items-center gap-x-2">
 			<Icon icon="basil:document-solid" />
 			Description
+
+			{#if $authStore.userDetails.id !== board.owner.id}
+				<Icon icon="material-symbols:info-outline" id="descripiton-info-icon" />
+				<Tooltip placement="top" triggeredBy="#descripiton-info-icon">
+					Only board creators or admins can change the description
+				</Tooltip>
+			{/if}
 		</p>
 
-		{#if !isEditing}
+		{#if !isEditing && $authStore.userDetails.id === board.owner.id}
 			<Button color="light" size="xs" on:click={openDescriptionEditor}>
-				<span class="flex items-center gap-x-2">
-					<Icon icon="mingcute:pencil-fill" />
+				<span class="flex items-center gap-x-2 text-gray-500">
+					<Icon icon="material-symbols:edit" />
 					Edit
 				</span>
 			</Button>
@@ -100,6 +125,7 @@
 	{#if isEditing}
 		<form on:submit={handleSubmit}>
 			<Label for="board-description" class="sr-only">Your message</Label>
+
 			<Textarea
 				id="board-description"
 				placeholder="Add a description."
@@ -119,17 +145,29 @@
 			</Helper>
 
 			<div class="flex items-center gap-x-4 mt-2">
-				<Button color="green" type="submit" size="sm">Save</Button>
+				<Button color="green" type="submit" size="sm" disabled={$isSubmitting}>
+					{#if $isSubmitting}
+						<Spinner class="mr-3" size="4" color="white" />Updating...
+					{:else}
+						Update
+					{/if}
+				</Button>
+
 				<Button color="light" type="button" size="sm" on:click={handleCancel}>Cancel</Button>
 			</div>
 		</form>
+	{:else if $form.description}
+		<div class={styles.markdown}>
+			<SvelteMarkdown source={$boardStore.currentBoard?.description ?? ''} />
+		</div>
 	{:else}
-		<SvelteMarkdown source={$form.description} />
+		<p>No description found. Please add one</p>
 	{/if}
 
 	<!-- DESCRIPTION ENDS -->
 
 	<!-- TEAM/MEMBER INFO STARTS -->
+	<!-- ONLY IF THE BOARD IS PRIVATE -->
 	<p class="text-sm text-gray-500 flex items-center gap-x-2 mt-4">
 		<span>
 			<Icon icon="basil:document-solid" />
@@ -137,18 +175,34 @@
 		<span> Team </span>
 	</p>
 
-	{#if board && board.members}
-		{#each board.members as member}
-			<div class="flex items-center gap-x-4">
-				<Avatar src={member.displayPicture} rounded size="sm" alt={member.name} />
-				<p>{member.name}</p>
+	{#if board.isPrivate}
+		{#if board && board.members}
+			{#each board.members as member}
+				<div class="flex items-center gap-x-4">
+					<Avatar src={member.displayPicture} rounded size="sm" alt={member.name} />
+					<p>{member.name}</p>
 
-				<!-- DISPAY ONLY TO ADMINS -->
-				<div class="ml-auto">
-					<Button color="red" outline={true} size="xs">Remove</Button>
+					<!-- ADMIN BADGE -->
+					{#if member.id === board.owner.id}
+						<p class="ml-auto text-xs">Admin</p>
+					{/if}
+
+					{#if $authStore.userDetails.id === board.owner.id && member.id !== board.owner.id}
+						<div class="ml-auto">
+							<!-- DISPAY ONLY TO ADMINS -->
+							<Button color="red" outline={true} size="xs">Remove</Button>
+						</div>
+					{/if}
 				</div>
-			</div>
-		{/each}
+			{/each}
+		{/if}
+	{:else}
+		<p>This is a public board. Any user can access the board.</p>
+		<p>
+			If you are the owner of the board, you can make it <strong>private</strong> and limit access to
+			select members.
+		</p>
 	{/if}
+
 	<!-- TEAM/MEMBER INFO ENDS -->
 </aside>

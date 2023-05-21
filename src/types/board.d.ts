@@ -11,7 +11,7 @@ export type Board = {
 	id: string;
 	coverURL?: string;
 	name: string;
-	owner: string;
+	owner: BoardMember;
 	members: Array<BoardMember>;
 	isPrivate: boolean;
 	labels?: CardLabel[];

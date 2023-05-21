@@ -82,13 +82,13 @@ devDependencies:
     specifier: ^10.4.14
     version: 10.4.14(postcss@8.4.23)
   eslint:
-    specifier: ^8.28.0
+    specifier: ^8.39.0
     version: 8.39.0
   eslint-config-prettier:
     specifier: ^8.5.0
     version: 8.8.0(eslint@8.39.0)
   eslint-plugin-svelte:
-    specifier: ^2.26.0
+    specifier: ^2.27.2
     version: 2.27.2(eslint@8.39.0)(svelte@3.58.0)
   husky:
     specifier: ^8.0.0
@@ -133,7 +133,7 @@ devDependencies:
     specifier: ^5.0.0
     version: 5.0.0(stylelint@15.6.1)
   svelte:
-    specifier: ^3.54.0
+    specifier: ^3.58.0
     version: 3.58.0
   svelte-check:
     specifier: ^3.0.1
