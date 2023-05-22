@@ -3,6 +3,8 @@
 	import { Avatar } from 'flowbite-svelte';
 
 	export let users: CardUserData[] = [];
+	export let draggable = false;
+
 	$: maxUsers = users.slice(0, 4);
 </script>
 
@@ -13,6 +15,7 @@
 			data-name={user.name}
 			stacked
 			class="border border-primary-700"
+			draggable={!draggable}
 		/>
 	{/each}
 
