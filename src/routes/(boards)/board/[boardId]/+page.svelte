@@ -8,17 +8,24 @@
 	import { sineIn } from 'svelte/easing';
 	import BoardDescription from '$components/BoardDescription/BoardDescription.component.svelte';
 	import boardStore from '$lib/store/boards.store';
+	import KanbanBoard from '$components/KanbanBoard/KanbanBoard.component.svelte';
+	import { getkanbanBoard } from '$lib/api/appwrite/tasks.api';
+	import type { KanbanBoardData } from '$types/kanban';
+	import kanbanStore from '$lib/store/kanbanBoard.store';
 
 	export let data: PageData;
 
 	let boardData: Board;
+	let kanbanBoard: KanbanBoardData;
 	let isboardDataLoading = true;
 	let isMenuClosed = true;
 
 	onMount(async () => {
 		try {
 			boardData = await getBoardData(data.boardId);
+			kanbanBoard = await getkanbanBoard();
 			boardStore.update((prevState) => ({ ...prevState, currentBoard: boardData }));
+			kanbanStore.update((prevState) => ({ ...prevState, kanbanBoard }));
 		} catch (e) {
 			// HANDLE ERROR
 			console.error(e);
@@ -43,13 +50,13 @@
 </script>
 
 <AuthGuard>
-	<main class="flex flex-col container mx-auto px-2 sm:px-0">
+	<main class="board-page flex flex-col mx-auto px-2 sm:px-0">
 		{#if isboardDataLoading}
 			<div class="min-h-screen flex items-center justify-center -mt-20">
 				<Spinner currentFill="#ef562f" />
 			</div>
 		{:else}
-			<header class="flex my-4 gap-x-4">
+			<header class="flex my-4 gap-x-4 container mx-auto">
 				<Button color="light">{boardData.isPrivate ? 'Private' : 'Public'}</Button>
 				{#each boardData.members as member}
 					<Avatar src={member.displayPicture} rounded />
@@ -58,7 +65,7 @@
 			</header>
 
 			<!-- TASK MANAGEMENT -->
-			<section class="bg-[#F8F9FD] p-6 rounded-3xl h-96">Board to add</section>
+			<KanbanBoard />
 
 			<Drawer
 				placement="right"
@@ -72,3 +79,9 @@
 		{/if}
 	</main>
 </AuthGuard>
+
+<style>
+	.board-page {
+		height: calc(100vh - 4rem);
+	}
+</style>

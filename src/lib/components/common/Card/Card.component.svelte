@@ -8,12 +8,18 @@
 	export let thumbnailURL = '';
 	export let users: CardUserData[] = [];
 	export let href = '';
+	export let draggable = false;
 </script>
 
 <article class="p-4 shadow flex flex-col gap-y-4 rounded-xl w-80">
 	<!-- IMAGE -->
 	{#if thumbnailURL}
-		<img src={thumbnailURL} alt="" class="h-48 w-full rounded-xl object-cover" />
+		<img
+			src={thumbnailURL}
+			alt=""
+			class="h-48 w-full rounded-xl object-cover"
+			draggable={!draggable}
+		/>
 	{/if}
 
 	<!-- TITLE -->
@@ -40,7 +46,7 @@
 
 	{#if users?.length > 0}
 		<div class="pl-4">
-			<CardAvatars {users} />
+			<CardAvatars {users} {draggable} />
 		</div>
 	{/if}
 </article>
