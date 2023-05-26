@@ -50,6 +50,7 @@
 </script>
 
 <AuthGuard>
+	<title>{`${data.boardDoc.name ?? ''} | Krello`}</title>
 	<main class="board-page flex flex-col mx-auto px-2 sm:px-0">
 		{#if isboardDataLoading}
 			<div class="min-h-screen flex items-center justify-center -mt-20">

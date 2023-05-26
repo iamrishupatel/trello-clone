@@ -10,14 +10,14 @@ type ReturnType = {
 
 export const load = (async ({ params }): Promise<ReturnType> => {
 	try {
-		const b = await db.getDocument(
+		const boardDoc = await db.getDocument(
 			APPWRITE_CONST.KRELLO_DB_ID,
 			APPWRITE_CONST.BOARDS_COLLECTION_ID,
 			params.boardId,
 		);
 		return {
 			boardId: params.boardId,
-			boardDoc: b,
+			boardDoc,
 		};
 	} catch (e) {
 		throw error(404, 'No Board Found');
