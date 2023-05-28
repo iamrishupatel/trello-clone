@@ -1,6 +1,9 @@
 <script lang="ts">
 	import Card from '$components/common/Card/Card.component.svelte';
+	import { createNewTask, updateTaskStatus } from '$lib/api/appwrite/tasks.api';
 	import { kanbanStore } from '$lib/store';
+	import boardStore from '$lib/store/boards.store';
+	import type { Board } from '$types/board';
 	import type { KanbanBoardData, KanbanStore, Task } from '$types/kanban';
 	import Icon from '@iconify/svelte';
 	import { Button } from 'flowbite-svelte';
@@ -11,10 +14,20 @@
 	export let columnId: string;
 
 	let kanbanData: KanbanBoardData;
+	let currentBoard: Board;
 	const un = kanbanStore.subscribe((store) => (kanbanData = store.kanbanBoard));
-	onDestroy(un);
+	const unsubscribeBoardStore = boardStore.subscribe((store) => {
+		if (store.currentBoard) {
+			currentBoard = store.currentBoard;
+		}
+	});
 
-	function handleDrop(event: any): void {
+	onDestroy(() => {
+		un();
+		unsubscribeBoardStore();
+	});
+
+	async function handleDrop(event: any): Promise<void> {
 		event.preventDefault();
 		let destinationColumnId = columnId;
 		if (!kanbanData) {
@@ -36,6 +49,7 @@
 
 		// add the current card to destination column
 		// remove the current card from source column
+
 		kanbanStore.update((kStore): KanbanStore => {
 			const updatedData: KanbanBoardData = {
 				...kStore.kanbanBoard,
@@ -51,6 +65,16 @@
 				kanbanBoard: updatedData,
 			};
 		});
+
+		/**
+		 * FIXME::
+		 * update the task status in the DB
+		 * in case the update fails,
+		 * sync the local store that is updated above
+		 * and display the error message
+		 */
+
+		await updateTaskStatus(currentCard.id, destinationColumnId, sourceColumnId);
 	}
 
 	function allowDrop(event: any): void {
@@ -60,6 +84,10 @@
 	const hanldeDragStart = (event: any): void => {
 		event.dataTransfer.setData('cardId', event.target.id);
 		event.dataTransfer.setData('sourceColumnId', columnId);
+	};
+
+	const handleCreateTask = (): void => {
+		createNewTask(currentBoard.id, columnId);
 	};
 </script>
 
@@ -83,7 +111,12 @@
 			</div>
 		{/each}
 
-		<Button class="w-[20rem] flex items-center justify-between" color="purple" outline={true}>
+		<Button
+			class="w-[20rem] flex items-center justify-between"
+			color="purple"
+			outline={true}
+			on:click={handleCreateTask}
+		>
 			Add Another Card
 			<Icon icon="typcn:plus" />
 		</Button>
