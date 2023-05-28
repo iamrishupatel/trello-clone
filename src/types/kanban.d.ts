@@ -14,12 +14,14 @@ export type KanbanBoardData = {
 
 export type Task = {
 	id: string;
+	boardId: string;
 	title: string;
 	assignees: User[];
 	description: string;
 	labels: CardLabel[];
 	coverUrl?: string;
 	status: TaskStatus;
+	prevStatusId: string;
 	priority: TaskPriority;
 };
 
@@ -42,4 +44,11 @@ export type TaskPriority = {
 		| 'dark'
 		| 'none'
 		| undefined;
+};
+
+export type TaskCreationPayload = {
+	title: string;
+	status: string;
+	boardId: string;
+	prevStatusId: string;
 };

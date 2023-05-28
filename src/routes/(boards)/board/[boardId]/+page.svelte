@@ -9,9 +9,19 @@
 	import BoardDescription from '$components/BoardDescription/BoardDescription.component.svelte';
 	import boardStore from '$lib/store/boards.store';
 	import KanbanBoard from '$components/KanbanBoard/KanbanBoard.component.svelte';
-	import { getkanbanBoard } from '$lib/api/appwrite/tasks.api';
+	import {
+		getkanbanBoard,
+		hanldeTaskCreateEvent,
+		hanldeTaskDeleteEvent,
+		hanldeTaskUpdateEvent,
+	} from '$lib/api/appwrite/tasks.api';
 	import type { KanbanBoardData } from '$types/kanban';
 	import kanbanStore from '$lib/store/kanbanBoard.store';
+	import Icon from '@iconify/svelte';
+	import NewTask from '$components/KanbanBoard/NewTask.component.svelte';
+	import { appwriteClient } from '$lib/api/appwrite/client';
+	import APPWRITE_CONST from '$constants/appwrite.constants';
+	import { extractEventFromString } from '$lib/helpers/eventParser.helper';
 
 	export let data: PageData;
 
@@ -19,13 +29,31 @@
 	let kanbanBoard: KanbanBoardData;
 	let isboardDataLoading = true;
 	let isMenuClosed = true;
+	let unsub: () => void;
 
 	onMount(async () => {
 		try {
 			boardData = await getBoardData(data.boardId);
-			kanbanBoard = await getkanbanBoard();
+			kanbanBoard = await getkanbanBoard(data.boardId);
 			boardStore.update((prevState) => ({ ...prevState, currentBoard: boardData }));
 			kanbanStore.update((prevState) => ({ ...prevState, kanbanBoard }));
+
+			// subscribe to appwrite task collection channel for updates
+			unsub = appwriteClient.subscribe(APPWRITE_CONST.TASK_CHANNEL, (res) => {
+				const event = extractEventFromString(res.events[0]);
+
+				switch (event) {
+					case 'create':
+						hanldeTaskCreateEvent(res.payload, data.boardId);
+						break;
+					case 'update':
+						hanldeTaskUpdateEvent(res.payload, data.boardId);
+						break;
+					case 'delete':
+						hanldeTaskDeleteEvent(res.payload, data.boardId);
+						break;
+				}
+			});
 		} catch (e) {
 			// HANDLE ERROR
 			console.error(e);
@@ -46,6 +74,9 @@
 
 	onDestroy(() => {
 		boardStore.update((prevState) => ({ ...prevState, currentBoard: null }));
+		if (unsub && typeof unsub === 'function') {
+			unsub();
+		}
 	});
 </script>
 
@@ -58,11 +89,28 @@
 			</div>
 		{:else}
 			<header class="flex my-4 gap-x-4 container mx-auto">
-				<Button color="light">{boardData.isPrivate ? 'Private' : 'Public'}</Button>
+				<Button color="light">
+					{#if boardData.isPrivate}
+						<span class="flex items-center gap-x-2">
+							<Icon icon="ic:round-lock" />
+							<span> Private </span>
+						</span>
+					{:else}
+						<span class="flex items-center gap-x-2">
+							<Icon icon="subway:world-1" />
+							<span> Public </span>
+						</span>
+					{/if}
+				</Button>
 				{#each boardData.members as member}
 					<Avatar src={member.displayPicture} rounded />
 				{/each}
-				<Button color="alternative" class="ml-auto" on:click={openMenu}>Menu</Button>
+
+				<NewTask />
+				<Button color="alternative" on:click={openMenu}>
+					<Icon icon="mingcute:dot-grid-fill" />
+					<span class="ml-2"> Menu </span>
+				</Button>
 			</header>
 
 			<!-- TASK MANAGEMENT -->
