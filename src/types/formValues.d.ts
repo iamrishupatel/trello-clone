@@ -22,3 +22,10 @@ export type BoardDescriptionFormValues = {
 	id: string;
 	description: string;
 };
+
+export type CreateNewTasksFormValues = {
+	title: string;
+	description: string;
+	statusId: string;
+	file: string | File;
+};
