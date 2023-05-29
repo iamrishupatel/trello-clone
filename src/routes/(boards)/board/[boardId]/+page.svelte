@@ -106,7 +106,11 @@
 					<Avatar src={member.displayPicture} rounded />
 				{/each}
 
-				<NewTask />
+				<NewTask>
+					<Icon icon="material-symbols:add" />
+					<span class="ml-2">Add new task</span>
+				</NewTask>
+
 				<Button color="alternative" on:click={openMenu}>
 					<Icon icon="mingcute:dot-grid-fill" />
 					<span class="ml-2"> Menu </span>
