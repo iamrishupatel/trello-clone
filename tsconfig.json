@@ -22,8 +22,8 @@
 			"$types": ["./src/types"],
 			"$types/*": ["./src/types/*"],
 
-			"$helpers": ["./src/helpers"],
-			"$helpers/*": ["./src/helpers/*"],
+			"$helpers": ["./src/lib/helpers"],
+			"$helpers/*": ["./src/lib/helpers/*"],
 
 			"$enums": ["./src/enums"],
 			"$enums/*": ["./src/enums/*"],
@@ -41,7 +41,10 @@
 			"$store/*": ["./src/lib/store/*"],
 
 			"$api": ["./src/lib/api"],
-			"$api/*": ["./src/lib/api/*"]
+			"$api/*": ["./src/lib/api/*"],
+
+			"$factories": ["./src/lib/factories"],
+			"$factories/*": ["./src/lib/factories/*"]
 		}
 	},
 	"include": [

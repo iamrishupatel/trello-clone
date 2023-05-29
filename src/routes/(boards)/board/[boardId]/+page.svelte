@@ -9,12 +9,7 @@
 	import BoardDescription from '$components/BoardDescription/BoardDescription.component.svelte';
 	import boardStore from '$lib/store/boards.store';
 	import KanbanBoard from '$components/KanbanBoard/KanbanBoard.component.svelte';
-	import {
-		getkanbanBoard,
-		hanldeTaskCreateEvent,
-		hanldeTaskDeleteEvent,
-		hanldeTaskUpdateEvent,
-	} from '$lib/api/appwrite/tasks.api';
+	import { getkanbanBoard } from '$lib/api/appwrite/tasks.api';
 	import type { KanbanBoardData } from '$types/kanban';
 	import kanbanStore from '$lib/store/kanbanBoard.store';
 	import Icon from '@iconify/svelte';
@@ -22,6 +17,11 @@
 	import { appwriteClient } from '$lib/api/appwrite/client';
 	import APPWRITE_CONST from '$constants/appwrite.constants';
 	import { extractEventFromString } from '$lib/helpers/eventParser.helper';
+	import {
+		hanldeTaskCreateEvent,
+		hanldeTaskDeleteEvent,
+		hanldeTaskUpdateEvent,
+	} from '$lib/api/appwrite/eventHandlers';
 
 	export let data: PageData;
 
