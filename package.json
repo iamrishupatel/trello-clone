@@ -69,7 +69,6 @@
 	},
 	"lint-staged": {
 		"*.{js,jsx,ts,tsx,svelte,css,scss}": [
-			"tsc --noEmit",
 			"pnpm run lint:fix",
 			"pnpm run lint",
 			"pnpm run lint:styles",

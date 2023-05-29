@@ -1,31 +1,21 @@
 <script lang="ts">
 	import Card from '$components/common/Card/Card.component.svelte';
-	import { createNewTask, updateTaskStatus } from '$lib/api/appwrite/tasks.api';
+	import { updateTaskStatus } from '$lib/api/appwrite/tasks.api';
 	import { kanbanStore } from '$lib/store';
-	import boardStore from '$lib/store/boards.store';
-	import type { Board } from '$types/board';
 	import type { KanbanBoardData, KanbanStore, Task } from '$types/kanban';
 	import Icon from '@iconify/svelte';
-	import { Button } from 'flowbite-svelte';
 	import { onDestroy } from 'svelte';
+	import NewTask from './NewTask.component.svelte';
 
 	export let title = '';
 	export let tasks: Task[] = [];
 	export let columnId: string;
 
 	let kanbanData: KanbanBoardData;
-	let currentBoard: Board;
-	const un = kanbanStore.subscribe((store) => (kanbanData = store.kanbanBoard));
-	const unsubscribeBoardStore = boardStore.subscribe((store) => {
-		if (store.currentBoard) {
-			currentBoard = store.currentBoard;
-		}
-	});
 
-	onDestroy(() => {
-		un();
-		unsubscribeBoardStore();
-	});
+	const unsub = kanbanStore.subscribe((store) => (kanbanData = store.kanbanBoard));
+
+	onDestroy(unsub);
 
 	async function handleDrop(event: any): Promise<void> {
 		event.preventDefault();
@@ -85,10 +75,6 @@
 		event.dataTransfer.setData('cardId', event.target.id);
 		event.dataTransfer.setData('sourceColumnId', columnId);
 	};
-
-	const handleCreateTask = (): void => {
-		createNewTask(currentBoard.id, columnId);
-	};
 </script>
 
 <section class="column overflow-y-auto p-4" on:drop={handleDrop} on:dragover={allowDrop}>
@@ -111,15 +97,15 @@
 			</div>
 		{/each}
 
-		<Button
-			class="w-[20rem] flex items-center justify-between"
+		<NewTask
+			defaultStatusId={columnId}
 			color="purple"
 			outline={true}
-			on:click={handleCreateTask}
+			btnClass="w-[20rem] flex items-center justify-between"
 		>
-			Add Another Card
-			<Icon icon="typcn:plus" />
-		</Button>
+			<span class="ml-2">Add another card</span>
+			<Icon icon="material-symbols:add" />
+		</NewTask>
 	</div>
 </section>
 

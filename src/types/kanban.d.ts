@@ -51,4 +51,5 @@ export type TaskCreationPayload = {
 	status: string;
 	boardId: string;
 	prevStatusId: string;
+	coverUrl?: string;
 };
