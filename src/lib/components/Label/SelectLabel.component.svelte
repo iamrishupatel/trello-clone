@@ -145,6 +145,7 @@
 		max-height: 0;
 		overflow: hidden;
 		transition: 0.4s height;
+		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
 	}
 
 	.dropdown.active {
