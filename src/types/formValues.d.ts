@@ -1,3 +1,5 @@
+import type { CardLabel } from './card';
+
 export type CreateAccountFormValues = {
 	name: string;
 	password: string;
@@ -28,4 +30,10 @@ export type CreateNewTasksFormValues = {
 	description: string;
 	statusId: string;
 	file: string | File;
+	labels: CardLabel[];
+};
+
+export type CreateNewLabelFormValues = {
+	text: string;
+	color: string;
 };

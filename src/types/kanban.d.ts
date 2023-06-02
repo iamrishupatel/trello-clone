@@ -52,4 +52,5 @@ export type TaskCreationPayload = {
 	boardId: string;
 	prevStatusId: string;
 	coverUrl?: string;
+	labels: string[];
 };

@@ -42,6 +42,7 @@ export const createNewTask = async (
 			title: formValues.title,
 			status: formValues.statusId,
 			prevStatusId: formValues.statusId,
+			labels: formValues.labels.map((label) => label.id),
 		};
 
 		if (coverUrl) {
@@ -53,6 +54,7 @@ export const createNewTask = async (
 		// TODO: after task is created add it to store
 		// and hanlde the create event for this as well
 	} catch (e: any) {
+		console.error(e);
 		toast.error(e.message);
 	}
 };
