@@ -33,9 +33,19 @@
 
 	onMount(async () => {
 		try {
+			boardStore.update((prevState) => ({
+				...prevState,
+				currentBoard: boardData,
+				labels: data.labels.map((label: any) => ({
+					id: label.$id,
+					text: label.text,
+					color: label.color,
+				})),
+			}));
+
 			boardData = await getBoardData(data.boardId);
 			kanbanBoard = await getkanbanBoard(data.boardId);
-			boardStore.update((prevState) => ({ ...prevState, currentBoard: boardData }));
+
 			kanbanStore.update((prevState) => ({ ...prevState, kanbanBoard }));
 
 			// subscribe to appwrite task collection channel for updates

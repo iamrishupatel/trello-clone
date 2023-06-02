@@ -1,3 +1,4 @@
+import type { CardLabel } from '$types/card';
 import type { TaskStatus } from '$types/kanban';
 
 export const getTaskStatus = (allStatus: any[], id: string): TaskStatus => {
@@ -6,4 +7,11 @@ export const getTaskStatus = (allStatus: any[], id: string): TaskStatus => {
 		id: $id,
 		text,
 	};
+};
+
+export const getTaskLabels = (taskLabels: string[], allLabels: CardLabel[]): CardLabel[] => {
+	return taskLabels.map((labelId) => {
+		const label = allLabels.find((label) => label.id === labelId);
+		return label as CardLabel;
+	});
 };

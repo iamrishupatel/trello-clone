@@ -5,6 +5,7 @@ export const initialBoardsStore: BoardStore = {
 	boards: [],
 	isCreateBoardModalOpen: false,
 	currentBoard: null,
+	labels: [],
 };
 
 const boardStore = writable(initialBoardsStore);

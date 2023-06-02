@@ -1,4 +1,5 @@
 <script lang="ts">
+	import SelectLabel from '$components/Label/SelectLabel.component.svelte';
 	import { createNewTask } from '$lib/api/appwrite/tasks.api';
 	import { kanbanStore } from '$lib/store';
 	import boardStore from '$lib/store/boards.store';
@@ -53,6 +54,7 @@
 		description: '',
 		statusId: defaultStatusId ?? '',
 		file: '',
+		labels: [],
 	};
 
 	const { form, errors, isSubmitting, handleChange, handleSubmit, handleReset } = createForm({
@@ -93,7 +95,30 @@
 		form.update((prevState) => ({ ...prevState, file: '' }));
 	};
 
-	const handleCancel = (): void => {
+	const handleAddLabel = (e: CustomEvent): void => {
+		form.update((formData) => {
+			if (formData.labels.some((label) => label.id === e.detail.id)) {
+				return formData;
+			} else {
+				formData.labels.push(e.detail);
+				return formData;
+			}
+		});
+	};
+
+	const handleRemoveLabel = (e: CustomEvent): void => {
+		form.update((formData) => {
+			if (formData.labels.some((label) => label.id === e.detail.id)) {
+				formData.labels = formData.labels.filter((label) => label.id !== e.detail.id);
+				return formData;
+			} else {
+				return formData;
+			}
+		});
+	};
+
+	const handleCancel = (e: Event): void => {
+		e.stopPropagation();
 		handleReset();
 		isModalOpen = false;
 	};
@@ -158,7 +183,7 @@
 					<Textarea
 						id="description"
 						name="description"
-						rows={5}
+						rows={20}
 						placeholder="Enter description"
 						bind:value={$form.description}
 						on:change={handleChange}
@@ -174,7 +199,7 @@
 				</div>
 			</section>
 
-			<section>
+			<section class="flex flex-col gap-4">
 				<div>
 					<Label>{defaultStatusId ? 'Status' : 'Select a status'}</Label>
 					<Select
@@ -190,6 +215,14 @@
 							<span class="font-medium">{$errors.statusId}</span>
 						</Helper>
 					{/if}
+				</div>
+
+				<div>
+					<SelectLabel
+						on:labelSelected={handleAddLabel}
+						on:removeLabel={handleRemoveLabel}
+						selectedLabels={$form.labels}
+					/>
 				</div>
 			</section>
 		</div>
