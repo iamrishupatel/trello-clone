@@ -1,4 +1,6 @@
-import { getTaskStatus } from '$lib/helpers/status.helper';
+import { getPriority, getTaskLabels, getTaskStatus } from '$lib/helpers/status.helper';
+import boardStore from '$lib/store/boards.store';
+import type { CardLabel } from '$types/card';
 import type { Task } from '$types/kanban';
 
 export const enhanceTasksData = (tasks: any[], allStatus: any[]): Task[] => {
@@ -6,6 +8,10 @@ export const enhanceTasksData = (tasks: any[], allStatus: any[]): Task[] => {
 };
 
 export const enhanceSingleTask = (task: any, allStatus: any[]): Task => {
+	let allLabels: CardLabel[] = [];
+	boardStore.subscribe((board) => {
+		allLabels = board.labels;
+	});
 	const enhancedTask: Task = {
 		id: task.$id,
 		status: getTaskStatus(allStatus, task.status),
@@ -15,12 +21,8 @@ export const enhanceSingleTask = (task: any, allStatus: any[]): Task => {
 		coverUrl: task.coverUrl,
 		boardId: task.boardId,
 		assignees: [],
-		labels: [],
-		priority: {
-			color: 'red',
-			id: 'priority',
-			text: 'high',
-		},
+		labels: getTaskLabels(task.labels, allLabels),
+		priority: getPriority(task.priority),
 	};
 
 	return enhancedTask;

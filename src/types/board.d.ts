@@ -27,6 +27,7 @@ export type BoardStore = {
 	boards: Board[];
 	isCreateBoardModalOpen: boolean;
 	currentBoard: Board | null;
+	labels: CardLabel[];
 };
 
 export type BoardCreationPayload = {

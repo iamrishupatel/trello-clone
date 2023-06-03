@@ -7,6 +7,8 @@ const createTaskFormSchema = Yup.object().shape({
 
 	description: Yup.string().max(9000, 'Description cannot be more than 9000 characters'),
 	statusId: Yup.string().required('Status is required'),
+	labels: Yup.array(),
+	priorityId: Yup.string(),
 });
 
 export default createTaskFormSchema;

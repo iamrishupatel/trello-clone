@@ -22,7 +22,7 @@ export type Task = {
 	coverUrl?: string;
 	status: TaskStatus;
 	prevStatusId: string;
-	priority: TaskPriority;
+	priority: TaskPriority | null;
 };
 
 export type TaskStatus = {
@@ -32,7 +32,7 @@ export type TaskStatus = {
 
 export type TaskPriority = {
 	id: string;
-	text: 'high' | 'low' | 'medium' | 'low';
+	text: 'high' | 'urgent' | 'medium' | 'low';
 	color:
 		| 'red'
 		| 'yellow'
@@ -52,4 +52,6 @@ export type TaskCreationPayload = {
 	boardId: string;
 	prevStatusId: string;
 	coverUrl?: string;
+	labels: string[];
+	priority?: string;
 };

@@ -42,10 +42,15 @@ export const createNewTask = async (
 			title: formValues.title,
 			status: formValues.statusId,
 			prevStatusId: formValues.statusId,
+			labels: formValues.labels.map((label) => label.id),
 		};
 
 		if (coverUrl) {
 			payload['coverUrl'] = coverUrl;
+		}
+
+		if (formValues.priorityId) {
+			payload['priority'] = formValues.priorityId;
 		}
 
 		await db.createDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskDocId, payload);
@@ -53,6 +58,7 @@ export const createNewTask = async (
 		// TODO: after task is created add it to store
 		// and hanlde the create event for this as well
 	} catch (e: any) {
+		console.error(e);
 		toast.error(e.message);
 	}
 };
