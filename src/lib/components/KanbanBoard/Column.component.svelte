@@ -5,7 +5,7 @@
 	import type { KanbanBoardData, KanbanStore, Task } from '$types/kanban';
 	import Icon from '@iconify/svelte';
 	import { onDestroy } from 'svelte';
-	import NewTask from './NewTask.component.svelte';
+	import NewTask from '../NewTask/NewTask.component.svelte';
 
 	export let title = '';
 	export let tasks: Task[] = [];
