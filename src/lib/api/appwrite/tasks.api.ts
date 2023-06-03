@@ -43,11 +43,14 @@ export const createNewTask = async (
 			status: formValues.statusId,
 			prevStatusId: formValues.statusId,
 			labels: formValues.labels.map((label) => label.id),
-			priority: formValues.priorityId,
 		};
 
 		if (coverUrl) {
 			payload['coverUrl'] = coverUrl;
+		}
+
+		if (formValues.priorityId) {
+			payload['priority'] = formValues.priorityId;
 		}
 
 		await db.createDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskDocId, payload);
