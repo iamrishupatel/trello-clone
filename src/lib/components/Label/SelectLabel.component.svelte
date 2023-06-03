@@ -19,12 +19,15 @@
 	onDestroy(unsub);
 
 	const dispatch = createEventDispatcher();
-	const hanldeSelectLabel = (label: CardLabel): void => {
+	const hanldeSelectLabel = (e: MouseEvent): void => {
+		const target = e.currentTarget as HTMLDivElement;
+		const label = availableLabels.find((availableLabel) => availableLabel.id === target.id);
 		dispatch('labelSelected', label);
 	};
 
-	const removeLabel = (label: CardLabel): void => {
-		dispatch('removeLabel', label);
+	const removeLabel = (e: MouseEvent): void => {
+		const target = e.currentTarget as HTMLButtonElement;
+		dispatch('removeLabel', target.id);
 	};
 
 	let isDropdownOpen = false;
@@ -59,7 +62,8 @@
 						>{label.text}
 						<svelte:fragment slot="closeBtn">
 							<button
-								on:click|stopPropagation={() => removeLabel(label)}
+								on:click|stopPropagation={removeLabel}
+								id={label.id}
 								type="button"
 								class="inline-flex items-center p-0.5 ml-2 text-sm bg-transparent rounded-sm text-blue-400 hover:bg-blue-200 hover:text-blue-900 dark:hover:bg-blue-800 dark:hover:text-blue-300"
 								aria-label="Remove"
@@ -87,7 +91,7 @@
 			{#each availableLabels as label}
 				<!-- FIXME: -->
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<div on:click={() => hanldeSelectLabel(label)}>
+				<div on:click|stopPropagation={hanldeSelectLabel} id={label.id}>
 					<Badge color={label.color} class="cursor-pointer">{label.text}</Badge>
 				</div>
 			{/each}

@@ -107,9 +107,10 @@
 	};
 
 	const handleRemoveLabel = (e: CustomEvent): void => {
+		const removedLabelId = e.detail;
 		form.update((formData) => {
-			if (formData.labels.some((label) => label.id === e.detail.id)) {
-				formData.labels = formData.labels.filter((label) => label.id !== e.detail.id);
+			if (formData.labels.some((label) => label.id === removedLabelId)) {
+				formData.labels = formData.labels.filter((label) => label.id !== removedLabelId);
 				return formData;
 			} else {
 				return formData;

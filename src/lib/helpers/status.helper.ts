@@ -10,8 +10,10 @@ export const getTaskStatus = (allStatus: any[], id: string): TaskStatus => {
 };
 
 export const getTaskLabels = (taskLabels: string[], allLabels: CardLabel[]): CardLabel[] => {
-	return taskLabels.map((labelId) => {
+	const labels: CardLabel[] = [];
+	taskLabels.forEach((labelId) => {
 		const label = allLabels.find((label) => label.id === labelId);
-		return label as CardLabel;
+		if (label) labels.push(label);
 	});
+	return labels;
 };
