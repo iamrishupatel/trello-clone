@@ -43,6 +43,7 @@ export const createNewTask = async (
 			status: formValues.statusId,
 			prevStatusId: formValues.statusId,
 			labels: formValues.labels.map((label) => label.id),
+			priority: formValues.priorityId,
 		};
 
 		if (coverUrl) {

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import SelectLabel from '$components/NewTask/SelectLabel.component.svelte';
+	import { TASK_PRIORITIES } from '$constants/app.constans';
 	import { createNewTask } from '$lib/api/appwrite/tasks.api';
 	import { kanbanStore } from '$lib/store';
 	import boardStore from '$lib/store/boards.store';
@@ -55,6 +56,7 @@
 		statusId: defaultStatusId ?? '',
 		file: '',
 		labels: [],
+		priorityId: '',
 	};
 
 	const { form, errors, isSubmitting, handleChange, handleSubmit, handleReset } = createForm({
@@ -202,13 +204,15 @@
 
 			<section class="flex flex-col gap-4">
 				<div>
-					<Label>{defaultStatusId ? 'Status' : 'Select a status'}</Label>
+					<Label>Status</Label>
 					<Select
+						name="statusId"
 						items={availableStatus}
 						bind:value={$form.statusId}
+						on:change={handleChange}
 						class={$errors.statusId
 							? 'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400'
-							: ''}
+							: ' '}
 						disabled={defaultStatusId ? true : false}
 					/>
 					{#if $errors.statusId}
@@ -219,6 +223,25 @@
 				</div>
 
 				<div>
+					<Label>Priority</Label>
+					<Select
+						name="priorityId"
+						items={TASK_PRIORITIES.map(({ id, text }) => ({ name: text, value: id }))}
+						bind:value={$form.priorityId}
+						on:change={handleChange}
+						class={$errors.priorityId
+							? 'capitalize bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400'
+							: 'capitalize'}
+					/>
+					{#if $errors.priorityId}
+						<Helper color="red">
+							<span class="font-medium">{$errors.priorityId}</span>
+						</Helper>
+					{/if}
+				</div>
+
+				<div>
+					<Label>Labels</Label>
 					<SelectLabel
 						on:labelSelected={handleAddLabel}
 						on:removeLabel={handleRemoveLabel}

@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
+import type { TaskPriority } from '$types/kanban';
 
 export const DEFAULT_BOARDS_PAGINATION_LIMIT = 100;
+
 export const ANON_USER_DATA = {
 	isAnonymous: true,
 	displayPicture: '',
@@ -8,6 +10,7 @@ export const ANON_USER_DATA = {
 	id: uuidv4(),
 	name: 'Anonymous',
 };
+
 export const AVAILABLE_LABEL_COLORS = [
 	{
 		value: 'blue',
@@ -48,5 +51,28 @@ export const AVAILABLE_LABEL_COLORS = [
 		value: 'pink',
 		tailwindCls:
 			'bg-pink-100 text-pink-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-pink-900 dark:text-pink-300',
+	},
+];
+
+export const TASK_PRIORITIES: TaskPriority[] = [
+	{
+		id: 'U_TP_3XJ7K9',
+		text: 'urgent',
+		color: 'pink',
+	},
+	{
+		id: 'H_TP_A2C5G8',
+		text: 'high',
+		color: 'red',
+	},
+	{
+		id: 'M_TP_E1B4F6',
+		text: 'medium',
+		color: 'yellow',
+	},
+	{
+		id: 'L_TP_Z9Y2R7',
+		text: 'low',
+		color: 'green',
 	},
 ];

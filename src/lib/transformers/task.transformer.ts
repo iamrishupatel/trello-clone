@@ -1,4 +1,4 @@
-import { getTaskLabels, getTaskStatus } from '$lib/helpers/status.helper';
+import { getPriority, getTaskLabels, getTaskStatus } from '$lib/helpers/status.helper';
 import boardStore from '$lib/store/boards.store';
 import type { CardLabel } from '$types/card';
 import type { Task } from '$types/kanban';
@@ -22,11 +22,7 @@ export const enhanceSingleTask = (task: any, allStatus: any[]): Task => {
 		boardId: task.boardId,
 		assignees: [],
 		labels: getTaskLabels(task.labels, allLabels),
-		priority: {
-			color: 'red',
-			id: 'priority',
-			text: 'high',
-		},
+		priority: getPriority(task.priority),
 	};
 
 	return enhancedTask;

@@ -31,6 +31,7 @@ export type CreateNewTasksFormValues = {
 	statusId: string;
 	file: string | File;
 	labels: CardLabel[];
+	priorityId: string;
 };
 
 export type CreateNewLabelFormValues = {

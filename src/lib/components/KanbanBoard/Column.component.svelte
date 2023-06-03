@@ -90,6 +90,7 @@
 				<Card
 					cardTitle={task.title}
 					labels={task.labels}
+					priority={task.priority}
 					users={task.assignees}
 					thumbnailURL={task.coverUrl}
 					draggable={true}

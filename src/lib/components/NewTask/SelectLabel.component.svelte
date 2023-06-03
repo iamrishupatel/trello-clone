@@ -81,7 +81,7 @@
 		{/if}
 	</button>
 
-	<div class={!isDropdownOpen ? 'dropdown' : 'dropdown  active border w-80 rounded-lg'}>
+	<div class={!isDropdownOpen ? 'dropdown' : 'dropdown active border w-80 rounded-lg bg-white'}>
 		<p class="flex items-center gap-x-2">
 			<Icon icon="material-symbols:label" />
 			<span class="text-sm"> Available </span>
