@@ -33,6 +33,7 @@
 
 	onMount(async () => {
 		try {
+			boardData = await getBoardData(data.boardId);
 			boardStore.update((prevState) => ({
 				...prevState,
 				currentBoard: boardData,
@@ -43,9 +44,7 @@
 				})),
 			}));
 
-			boardData = await getBoardData(data.boardId);
 			kanbanBoard = await getkanbanBoard(data.boardId);
-
 			kanbanStore.update((prevState) => ({ ...prevState, kanbanBoard }));
 
 			// subscribe to appwrite task collection channel for updates
