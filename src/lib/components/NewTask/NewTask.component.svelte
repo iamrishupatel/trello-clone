@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SelectLabel from '$components/Label/SelectLabel.component.svelte';
+	import SelectLabel from '$components/NewTask/SelectLabel.component.svelte';
 	import { createNewTask } from '$lib/api/appwrite/tasks.api';
 	import { kanbanStore } from '$lib/store';
 	import boardStore from '$lib/store/boards.store';

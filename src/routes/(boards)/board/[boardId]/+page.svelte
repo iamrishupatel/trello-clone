@@ -13,7 +13,7 @@
 	import type { KanbanBoardData } from '$types/kanban';
 	import kanbanStore from '$lib/store/kanbanBoard.store';
 	import Icon from '@iconify/svelte';
-	import NewTask from '$components/KanbanBoard/NewTask.component.svelte';
+	import NewTask from '$components/NewTask/NewTask.component.svelte';
 	import { appwriteClient } from '$lib/api/appwrite/client';
 	import APPWRITE_CONST from '$constants/appwrite.constants';
 	import { extractEventFromString } from '$lib/helpers/eventParser.helper';
