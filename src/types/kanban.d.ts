@@ -54,4 +54,5 @@ export type TaskCreationPayload = {
 	coverUrl?: string;
 	labels: string[];
 	priority?: string;
+	description: string;
 };
