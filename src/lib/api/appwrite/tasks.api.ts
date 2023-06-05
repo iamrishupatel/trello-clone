@@ -43,6 +43,7 @@ export const createNewTask = async (
 			status: formValues.statusId,
 			prevStatusId: formValues.statusId,
 			labels: formValues.labels.map((label) => label.id),
+			description: formValues.description,
 		};
 
 		if (coverUrl) {
@@ -77,6 +78,40 @@ export const updateTaskStatus = async (
 		// FIXME: handle errors
 		// remove permissions to mimic errors
 		console.log(e);
+	}
+};
+
+export const updateTaskTitle = async (taskId: string, taskTitle: string): Promise<void> => {
+	try {
+		await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskId, {
+			title: taskTitle,
+		});
+	} catch (e: any) {
+		console.error(e);
+		toast.error(e.message);
+	}
+};
+
+export const updateTaskPriority = async (taskId: string, priority: string): Promise<void> => {
+	try {
+		await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskId, {
+			priority,
+		});
+	} catch (e: any) {
+		console.error(e);
+		toast.error(e.message);
+	}
+};
+
+export const updateTaskDescription = async (taskId: string, description: string): Promise<void> => {
+	try {
+		await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskId, {
+			description,
+		});
+		toast.success('Task description updated successfully');
+	} catch (e) {
+		toast.error('Unable to update task description');
+		console.error(e);
 	}
 };
 

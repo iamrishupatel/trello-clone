@@ -6,12 +6,20 @@
 	import Icon from '@iconify/svelte';
 	import { onDestroy } from 'svelte';
 	import NewTask from '../NewTask/NewTask.component.svelte';
+	import TaskDetails from '$components/TaskDetails/TaskDetails.component.svelte';
 
-	export let title = '';
-	export let tasks: Task[] = [];
-	export let columnId: string;
+	export let title = '',
+		tasks: Task[] = [],
+		columnId: string;
 
 	let kanbanData: KanbanBoardData;
+	let showTaskModal = false;
+	let selectedTask: Task | null = null;
+
+	const handleDrawerOpen = (task: Task): void => {
+		showTaskModal = true;
+		selectedTask = task;
+	};
 
 	const unsub = kanbanStore.subscribe((store) => (kanbanData = store.kanbanBoard));
 
@@ -80,7 +88,6 @@
 <section class="column overflow-y-auto p-4" on:drop={handleDrop} on:dragover={allowDrop}>
 	<div class="flex items-center justify-between p-4">
 		<p class="capitalize">{title}</p>
-
 		<Icon icon="tabler:dots" />
 	</div>
 
@@ -94,6 +101,12 @@
 					users={task.assignees}
 					thumbnailURL={task.coverUrl}
 					draggable={true}
+					on:click={//
+					// eslint-disable-next-line
+					() => {
+						handleDrawerOpen(task);
+					}}
+					href="#"
 				/>
 			</div>
 		{/each}
@@ -107,6 +120,8 @@
 			<span class="ml-2">Add another card</span>
 			<Icon icon="material-symbols:add" />
 		</NewTask>
+
+		<TaskDetails bind:isModalOpen={showTaskModal} taskDetails={selectedTask} />
 	</div>
 </section>
 

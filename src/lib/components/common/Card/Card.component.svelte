@@ -3,6 +3,7 @@
 	import CardAvatars from './CardAvatars.component.svelte';
 	import type { CardLabel, CardUserData } from '$types/card';
 	import type { TaskPriority } from '$types/kanban';
+	import { createEventDispatcher } from 'svelte';
 
 	//props
 	export let cardTitle = '',
@@ -11,24 +12,36 @@
 		users: CardUserData[] = [],
 		href = '',
 		draggable = false,
-		priority: TaskPriority | null;
+		priority: TaskPriority | null = null;
 	//props end
+
+	const dispatch = createEventDispatcher();
+	const hanldeTitleClick = (): void => {
+		dispatch('click');
+	};
 </script>
 
 <article class="p-4 shadow flex flex-col gap-y-4 rounded-xl w-80">
 	<!-- IMAGE -->
 	{#if thumbnailURL}
+		<!-- FIXME:  -->
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<img
 			src={thumbnailURL}
 			alt=""
 			class="h-48 w-full rounded-xl object-cover"
 			draggable={!draggable}
+			on:click={hanldeTitleClick}
 		/>
 	{/if}
 
 	<!-- TITLE -->
 	{#if cardTitle}
-		<h5 class="textxl font-bold tracking-tight text-gray-900 dark:text-white break-all">
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<h5
+			class="textxl font-bold tracking-tight text-gray-900 dark:text-white break-all cursor-pointer"
+			on:click={hanldeTitleClick}
+		>
 			{#if href}
 				<a {href}>
 					{cardTitle}
