@@ -9,6 +9,9 @@ import APPWRITE_CONST from '$constants/appwrite.constants';
 import { v4 as uuidv4 } from 'uuid';
 import TEXT from '$constants/text.constants';
 import ROUTES from '$constants/routes.constants';
+import { APP_URL } from '$constants/app.constans';
+import toast from 'svelte-french-toast';
+import ERROR_TYPES from '$constants/error.constants';
 
 export const createAccount = async (values: CreateAccountFormValues): Promise<void> => {
 	/**
@@ -170,5 +173,57 @@ export const handleSignout = async (sessionId: string): Promise<void> => {
 		await goto(ROUTES.LOGIN);
 	} catch (e) {
 		console.log(e);
+	}
+};
+
+export const handleResetPassword = async (email: string): Promise<void> => {
+	try {
+		const res = await account.createRecovery(email, `${APP_URL}/reset-password`);
+		console.log(res);
+		toast.success('Link sent successfully. Please check your email');
+	} catch (e: any) {
+		console.error(e.message);
+		if (e.code === 429) {
+			toast.error('Too many requst! Please try again later');
+			return;
+		}
+
+		if (e.type === ERROR_TYPES.USER_NOT_FOUND) {
+			toast.error('Email not found. Please make sure you entered the correct email address.');
+			return;
+		} else {
+			toast.error('Oops! Something went wrong. Please try again later.');
+			return;
+		}
+	}
+};
+
+export const updatePassword = async (
+	userId: string,
+	secret: string,
+	password: string,
+	confirmPasword: string,
+): Promise<void> => {
+	try {
+		await account.updateRecovery(userId, secret, password, confirmPasword);
+		goto(`${ROUTES.LOGIN}?source=${ROUTES.RESET_PASSWORD}`);
+	} catch (e: any) {
+		console.log(e);
+		if (e.code === 429) {
+			toast.error('Too many requst! Please try again later');
+			return;
+		}
+
+		if (e.type === ERROR_TYPES.USER_INVALID_TOKEN) {
+			toast.error('Link expired. Request a new one.');
+			return;
+		}
+		if (e.type === ERROR_TYPES.USER_NOT_FOUND) {
+			toast.error('Email not found. Please make sure you entered the correct email address.');
+			return;
+		} else {
+			toast.error('Oops! Something went wrong. Please try again later.');
+			return;
+		}
 	}
 };
