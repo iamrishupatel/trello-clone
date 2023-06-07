@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ROUTES from '$constants/routes.constants';
-	import logo from '$lib/logos/krello-logo.svg';
+	import logo from '$lib/logos/krello-logo-full.svg';
 	import Icon from '@iconify/svelte';
 	import {
 		Navbar,
