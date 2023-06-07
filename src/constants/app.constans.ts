@@ -1,7 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { TaskPriority } from '$types/kanban';
+import { PUBLIC_APP_URL } from '$env/static/public';
 
 export const DEFAULT_BOARDS_PAGINATION_LIMIT = 100;
+export const APP_URL = PUBLIC_APP_URL ?? 'http://localhost:3000';
 
 export const ANON_USER_DATA = {
 	isAnonymous: true,

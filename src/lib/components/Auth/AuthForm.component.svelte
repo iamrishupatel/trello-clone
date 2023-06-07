@@ -1,5 +1,5 @@
 <script lang="ts">
-	import SocialLogins from './SocialLogins.component.svelte';
+	// import SocialLogins from './SocialLogins.component.svelte';
 	import AuthHeader from './AuthHeader.component.svelte';
 
 	export let title: string;
@@ -11,12 +11,12 @@
 
 	<slot />
 
-	<p class="or mx-auto mt-4">OR</p>
+	<!-- <p class="or mx-auto mt-4">OR</p> -->
 
 	<footer class="flex flex-col items-center text-sm gap-y-4">
-		<p>Continue with these social profiles</p>
+		<!-- <p>Continue with these social profiles</p> -->
 
-		<SocialLogins />
+		<!-- <SocialLogins /> -->
 
 		<slot name="footer-link" />
 	</footer>
@@ -39,29 +39,29 @@
 			width: 100%;
 		}
 
-		.or {
-			$line-width: 110px;
-			position: relative;
+		// .or {
+		// 	$line-width: 110px;
+		// 	position: relative;
 
-			&::before {
-				content: '';
-				position: absolute;
-				height: 1px;
-				width: $line-width;
-				background-color: #bdbdbd;
-				top: 50%;
-				right: 200%;
-			}
+		// 	&::before {
+		// 		content: '';
+		// 		position: absolute;
+		// 		height: 1px;
+		// 		width: $line-width;
+		// 		background-color: #bdbdbd;
+		// 		top: 50%;
+		// 		right: 200%;
+		// 	}
 
-			&::after {
-				content: '';
-				position: absolute;
-				height: 1px;
-				width: $line-width;
-				background-color: #bdbdbd;
-				top: 50%;
-				left: 200%;
-			}
-		}
+		// 	&::after {
+		// 		content: '';
+		// 		position: absolute;
+		// 		height: 1px;
+		// 		width: $line-width;
+		// 		background-color: #bdbdbd;
+		// 		top: 50%;
+		// 		left: 200%;
+		// 	}
+		// }
 	}
 </style>
