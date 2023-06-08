@@ -38,3 +38,8 @@ export type CreateNewLabelFormValues = {
 	text: string;
 	color: string;
 };
+
+export type CreateCommentFormValues = {
+	body: string;
+	authorId: string;
+};
