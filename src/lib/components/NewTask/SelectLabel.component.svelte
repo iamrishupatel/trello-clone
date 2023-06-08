@@ -52,7 +52,7 @@
 	<button
 		type="button"
 		on:click={hanldeClick}
-		class="relative border w-80 flex items-center px-3 py-2 rounded-lg z-0"
+		class="relative border w-full flex items-center px-3 py-2 rounded-lg z-0"
 		id="bell"
 	>
 		{#if selectedLabels.length > 0}

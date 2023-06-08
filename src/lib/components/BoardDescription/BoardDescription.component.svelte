@@ -124,8 +124,7 @@
 	<!-- DESCRIPTION FORM -->
 	{#if isEditing}
 		<form on:submit={handleSubmit}>
-			<Label for="board-description" class="sr-only">Your message</Label>
-
+			<Label for="board-description" class="sr-only">Add a description</Label>
 			<Textarea
 				id="board-description"
 				placeholder="Add a description."

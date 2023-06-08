@@ -6,6 +6,7 @@ import toast from 'svelte-french-toast';
 import { enhanceTasksData } from '$lib/transformers/task.transformer';
 import { generateKanbanBoardFromTasks } from '$lib/factories/kanban.factories';
 import type { CreateNewTasksFormValues } from '$types/formValues';
+import type { CardLabel } from '$types/card';
 
 // CONSTANTS USED
 const { KRELLO_DB_ID, TASK_COLLECTION_ID, STATUS_COLLECTION_ID } = APPWRITE_CONST;
@@ -43,6 +44,7 @@ export const createNewTask = async (
 			status: formValues.statusId,
 			prevStatusId: formValues.statusId,
 			labels: formValues.labels.map((label) => label.id),
+			description: formValues.description,
 		};
 
 		if (coverUrl) {
@@ -78,6 +80,89 @@ export const updateTaskStatus = async (
 		// remove permissions to mimic errors
 		console.log(e);
 	}
+};
+
+export const updateTaskTitle = async (taskId: string, taskTitle: string): Promise<void> => {
+	try {
+		await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskId, {
+			title: taskTitle,
+		});
+	} catch (e: any) {
+		console.error(e);
+		toast.error(e.message);
+	}
+};
+
+export const updateTaskPriority = async (taskId: string, priority: string): Promise<void> => {
+	try {
+		await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskId, {
+			priority,
+		});
+	} catch (e: any) {
+		console.error(e);
+		toast.error(e.message);
+	}
+};
+
+export const updateTaskDescription = async (taskId: string, description: string): Promise<void> => {
+	try {
+		await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskId, {
+			description,
+		});
+		toast.success('Task description updated successfully');
+	} catch (e) {
+		toast.error('Unable to update task description');
+		console.error(e);
+	}
+};
+
+export const addLabelInTask = async (
+	taskId: string,
+	newLabelId: string,
+	labels: CardLabel[],
+): Promise<void> => {
+	try {
+		await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskId, {
+			labels: [...labels.map((label) => label.id), newLabelId],
+		});
+		toast.success('Task updated successfully');
+	} catch (e) {
+		toast.error('Unable to update task description');
+		console.error(e);
+	}
+};
+
+export const removeLabelInTask = async (
+	taskId: string,
+	removedLabelId: string,
+	labels: CardLabel[],
+): Promise<void> => {
+	try {
+		await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskId, {
+			labels: labels.filter((oldLabel) => oldLabel.id !== removedLabelId).map((label) => label.id),
+		});
+		toast.success('Task updated successfully');
+	} catch (e) {
+		toast.error('Unable to update task description');
+		console.error(e);
+	}
+};
+
+export const updateTaskCoverUrl = async (
+	taskDocId: string,
+	cover: string | File,
+): Promise<string> => {
+	let coverUrl;
+	if (typeof cover === 'string') {
+		coverUrl = cover;
+	} else {
+		coverUrl = await uploadCoverPicture(cover);
+	}
+
+	await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskDocId, {
+		coverUrl,
+	});
+	return coverUrl;
 };
 
 // might be refactored
