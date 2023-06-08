@@ -56,3 +56,16 @@ export type TaskCreationPayload = {
 	priority?: string;
 	description: string;
 };
+
+export type CommentType = {
+	id: string;
+	body: string;
+	createdAt: string;
+	author: User;
+};
+
+export type CommentCreationPayload = {
+	body: string;
+	author: string;
+	taskId: string;
+};

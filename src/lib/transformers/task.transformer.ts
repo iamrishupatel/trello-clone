@@ -1,7 +1,9 @@
+import { getUserData } from '$lib/api/appwrite/userDetails.api';
 import { getPriority, getTaskLabels, getTaskStatus } from '$lib/helpers/status.helper';
 import boardStore from '$lib/store/boards.store';
+import type { CommentDoc } from '$types/appwriteDocs.types';
 import type { CardLabel } from '$types/card';
-import type { Task } from '$types/kanban';
+import type { CommentType, Task } from '$types/kanban';
 
 export const enhanceTasksData = (tasks: any[], allStatus: any[]): Task[] => {
 	return tasks.map((task) => enhanceSingleTask(task, allStatus));
@@ -26,4 +28,14 @@ export const enhanceSingleTask = (task: any, allStatus: any[]): Task => {
 	};
 
 	return enhancedTask;
+};
+
+export const enhanceComment = async (comment: CommentDoc): Promise<CommentType> => {
+	const author = await getUserData(comment.author);
+	return {
+		id: comment.$id,
+		body: comment.body,
+		createdAt: comment.$createdAt,
+		author,
+	};
 };
