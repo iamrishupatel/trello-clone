@@ -13,7 +13,7 @@
 	import type { AuthState, UserDetails } from '$types/authStore';
 	import type { CreateCommentFormValues } from '$types/formValues';
 	import type { CommentType } from '$types/kanban';
-	import { createCommentValidationSchema } from '$validations/comment.validation';
+	import { createCommentValidationSchema } from '$lib/validations/task.validations';
 	import Icon from '@iconify/svelte';
 	import { Avatar, Helper, Spinner } from 'flowbite-svelte';
 	import { Textarea, Button } from 'flowbite-svelte';

@@ -6,7 +6,7 @@
 	import boardStore from '$lib/store/boards.store';
 	import type { Board } from '$types/board';
 	import type { CreateNewTasksFormValues } from '$types/formValues';
-	import createTaskFormSchema from '$validations/createTask.validation';
+	import { createTaskFormSchema } from '$lib/validations/task.validations';
 	import Icon from '@iconify/svelte';
 	import {
 		Button,

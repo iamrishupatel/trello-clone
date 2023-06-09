@@ -3,7 +3,7 @@
 	import { createNewLabel } from '$lib/api/appwrite/labels';
 	import boardStore from '$lib/store/boards.store';
 	import type { CardLabel } from '$types/card';
-	import createLabelFormSchema from '$validations/createLabel.validation';
+	import { createLabelFormSchema } from '$lib/validations/task.validations';
 	import Icon from '@iconify/svelte';
 	import { Input, Badge, Label, Radio, Spinner, Helper } from 'flowbite-svelte';
 	import { createEventDispatcher, onDestroy } from 'svelte';

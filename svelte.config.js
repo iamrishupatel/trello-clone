@@ -29,7 +29,7 @@ const config = {
 			$enums: 'src/enums',
 			$utils: 'src/utils',
 			$constants: 'src/constants',
-			$validations: 'src/validations',
+			$validations: 'src/lib/validations',
 			$store: 'src/lib/store',
 			$api: 'src/lib/api',
 			$factories: 'src/lib/factories',

@@ -34,8 +34,8 @@
 			"$constants": ["./src/constants"],
 			"$constants/*": ["./src/constants/*"],
 
-			"$validations": ["./src/validations"],
-			"$validations/*": ["./src/validations/*"],
+			"$validations": ["./src/lib/validations"],
+			"$validations/*": ["./src/lib/validations/*"],
 
 			"$store": ["./src/lib/store"],
 			"$store/*": ["./src/lib/store/*"],
