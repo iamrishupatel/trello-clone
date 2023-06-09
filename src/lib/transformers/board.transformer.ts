@@ -1,8 +1,8 @@
-import { ANON_USER_DATA } from '$constants/app.constans';
+import { ANON_USER_DATA } from '$lib/constants/app.constans';
 import { authStore } from '$lib/store';
-import type { AuthState, UserDetails } from '$types/authStore';
-import type { Board } from '$types/board';
-import type { User } from '$types/user';
+import type { AuthState, UserDetails } from '$lib/types/authStore';
+import type { Board } from '$lib/types/board';
+import type { User } from '$lib/types/user';
 
 export const enhanceBoardData = (board: any, bulkUsers: User[]): Board => {
 	let currentUser: UserDetails | undefined;

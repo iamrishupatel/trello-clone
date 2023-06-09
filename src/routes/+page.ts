@@ -1,9 +1,9 @@
-import { DEFAULT_BOARDS_PAGINATION_LIMIT } from '$constants/app.constans';
+import { DEFAULT_BOARDS_PAGINATION_LIMIT } from '$lib/constants/app.constans';
 import { getAllBoards } from '$lib/api/appwrite/boards.api';
 import { authStore } from '$lib/store';
 import boardStore from '$lib/store/boards.store';
-import type { AuthState } from '$types/authStore';
-import type { Board } from '$types/board';
+import type { AuthState } from '$lib/types/authStore';
+import type { Board } from '$lib/types/board';
 import type { PageLoad } from './$types';
 
 type ReturnType = {

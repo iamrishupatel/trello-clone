@@ -1,9 +1,9 @@
 import { getUserData } from '$lib/api/appwrite/userDetails.api';
 import { getPriority, getTaskLabels, getTaskStatus } from '$lib/helpers/status.helper';
 import boardStore from '$lib/store/boards.store';
-import type { CommentDoc } from '$types/appwriteDocs.types';
-import type { CardLabel } from '$types/card';
-import type { CommentType, Task } from '$types/kanban';
+import type { CommentDoc } from '$lib/types/appwriteDocs.types';
+import type { CardLabel } from '$lib/types/card';
+import type { CommentType, Task } from '$lib/types/kanban';
 
 export const enhanceTasksData = (tasks: any[], allStatus: any[]): Task[] => {
 	return tasks.map((task) => enhanceSingleTask(task, allStatus));

@@ -19,20 +19,20 @@
 			"$sass": ["./src/lib/sass"],
 			"$sass/*": ["./src/lib/sass/*"],
 
-			"$types": ["./src/types"],
-			"$types/*": ["./src/types/*"],
+			"$types": ["./src/lib/types"],
+			"$types/*": ["./src/lib/types/*"],
 
 			"$helpers": ["./src/lib/helpers"],
 			"$helpers/*": ["./src/lib/helpers/*"],
 
-			"$enums": ["./src/enums"],
-			"$enums/*": ["./src/enums/*"],
+			"$enums": ["./src/lib/enums"],
+			"$enums/*": ["./src/lib/enums/*"],
 
-			"$utils": ["./src/utils"],
-			"$utils/*": ["./src/utils/*"],
+			"$utils": ["./src/lib/utils"],
+			"$utils/*": ["./src/lib/utils/*"],
 
-			"$constants": ["./src/constants"],
-			"$constants/*": ["./src/constants/*"],
+			"$constants": ["./src/lib/constants"],
+			"$constants/*": ["./src/lib/constants/*"],
 
 			"$validations": ["./src/lib/validations"],
 			"$validations/*": ["./src/lib/validations/*"],
@@ -44,7 +44,10 @@
 			"$api/*": ["./src/lib/api/*"],
 
 			"$factories": ["./src/lib/factories"],
-			"$factories/*": ["./src/lib/factories/*"]
+			"$factories/*": ["./src/lib/factories/*"],
+
+			"$transformers": ["./src/lib/transformers"],
+			"$transformers/*": ["./src/lib/transformers/*"]
 		}
 	},
 	"include": [
