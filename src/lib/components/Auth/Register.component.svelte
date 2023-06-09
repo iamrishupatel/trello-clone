@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { InputFieldType } from '$enums/Input.enums';
 	import type { CreateAccountFormValues } from '$types/formValues';
-	import { createAccountValidation } from '$validations';
 	import Icon from '@iconify/svelte';
 	import { Button, Helper, Input, Label, Spinner } from 'flowbite-svelte';
 	import type { InputType } from 'flowbite-svelte/dist/types';
 	import { createForm } from 'svelte-forms-lib';
 	import { createAccount } from '$api/appwrite/auth';
+	import { createAccountValidation } from '$lib/validations/auth.validations';
 
 	let passwordFieldType: InputType = 'password';
 	const changePasswordFiledType = (): void => {

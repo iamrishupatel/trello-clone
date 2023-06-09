@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { updateCommentValidationSchema } from '$validations/comment.validation';
 	import { updateComment } from '$lib/api/appwrite/comments.api';
 	import { Button, Helper, Spinner, Textarea } from 'flowbite-svelte';
 	import { createForm } from 'svelte-forms-lib';
 	import { createEventDispatcher } from 'svelte';
 	import type { AppwriteApiError } from '$types/error.types';
+	import { updateCommentValidationSchema } from '$lib/validations/task.validations';
 
 	export let commentBody = '';
 	export let commentId: string;

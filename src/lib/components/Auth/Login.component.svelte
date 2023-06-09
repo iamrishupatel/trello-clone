@@ -3,13 +3,13 @@
 	import { InputFieldType } from '$enums/Input.enums';
 	import { authStore } from '$lib/store';
 	import type { LoginFormValues } from '$types/formValues';
-	import { loginFormValidation } from '$validations';
 	import Icon from '@iconify/svelte';
 	import { Button, Helper, Input, Label, Spinner } from 'flowbite-svelte';
 	import type { InputType } from 'flowbite-svelte/dist/types';
 	import { createForm } from 'svelte-forms-lib';
 	import { createAnonSession, handleEmailPasswordLogin } from '$api/appwrite/auth';
 	import { AuthStatus } from '$enums/AuthStatus.enums';
+	import { loginFormValidation } from '$lib/validations/auth.validations';
 
 	let passwordFieldType: InputType = 'password';
 

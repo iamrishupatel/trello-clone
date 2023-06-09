@@ -20,8 +20,8 @@
 	import moment from 'moment';
 	import type { BoardDescriptionFormValues } from '$types/formValues';
 	import { updateBoardDescription } from '$lib/api/appwrite/boards.api';
-	import boardDescriptionFormSchema from '$validations/updateBoard.validations';
 	import { authStore } from '$lib/store';
+	import { boardDescriptionFormSchema } from '$lib/validations/board.validations';
 
 	export let isMenuClosed: boolean;
 

@@ -3,10 +3,10 @@
 	import { Avatar, Button, Fileupload, Helper, Spinner } from 'flowbite-svelte';
 	import { Label, Input, Textarea } from 'flowbite-svelte';
 	import { createForm } from 'svelte-forms-lib';
-	import { editProfileValidation } from '$validations';
 	import type { EditProfileValues } from '$types/formValues';
 	import { authStore } from '$lib/store';
 	import { updateUserDetails } from '$api/appwrite/userDetails.api';
+	import { editProfileValidation } from '$lib/validations/auth.validations';
 
 	const initialValues: EditProfileValues = {
 		bio: $authStore.userDetails.bio,

@@ -4,8 +4,8 @@
 	import Icon from '@iconify/svelte';
 	import ROUTES from '$constants/routes.constants';
 	import logo from '$lib/logos/krello-logo-full.svg';
-	import { resetPasswordSchema } from '$validations/authForm.validation';
 	import { updatePassword } from '$lib/api/appwrite/auth';
+	import { resetPasswordSchema } from '$lib/validations/auth.validations';
 
 	export let userId: string, secret: string;
 

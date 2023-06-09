@@ -3,7 +3,7 @@
 	import { authStore } from '$lib/store';
 	import type { AuthState } from '$types/authStore';
 	import type { NewBoardFormData } from '$types/board';
-	import newBoardFormSchema from '$validations/newBoardForm.validation';
+	import { newBoardFormSchema } from '$lib/validations/board.validations';
 	import Icon from '@iconify/svelte';
 	import { Button, Dropzone, Helper, Input, Label, Modal, Spinner, Toggle } from 'flowbite-svelte';
 	import { createForm } from 'svelte-forms-lib';
