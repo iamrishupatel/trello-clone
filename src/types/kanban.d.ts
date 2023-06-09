@@ -62,10 +62,12 @@ export type CommentType = {
 	body: string;
 	createdAt: string;
 	author: User;
+	isEdited: boolean;
 };
 
 export type CommentCreationPayload = {
 	body: string;
 	author: string;
 	taskId: string;
+	isEdited: boolean;
 };

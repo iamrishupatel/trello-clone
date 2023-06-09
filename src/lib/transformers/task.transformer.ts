@@ -37,5 +37,6 @@ export const enhanceComment = async (comment: CommentDoc): Promise<CommentType> 
 		body: comment.body,
 		createdAt: comment.$createdAt,
 		author,
+		isEdited: comment.isEdited,
 	};
 };

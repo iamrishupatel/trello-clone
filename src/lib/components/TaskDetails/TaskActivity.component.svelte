@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Comment from '$components/Comment.component.svelte';
 	import APPWRITE_CONST from '$constants/appwrite.constants';
+	import { AppwriteEvent } from '$enums/Events.enums';
 	import { Status } from '$enums/Status.enums';
 	import { appwriteClient } from '$lib/api/appwrite/client';
 	import { createNewComment, getComments } from '$lib/api/appwrite/comments.api';
@@ -12,7 +13,7 @@
 	import type { AuthState, UserDetails } from '$types/authStore';
 	import type { CreateCommentFormValues } from '$types/formValues';
 	import type { CommentType } from '$types/kanban';
-	import createCommentValidationSchema from '$validations/ceateComment.validation';
+	import { createCommentValidationSchema } from '$validations/comment.validation';
 	import Icon from '@iconify/svelte';
 	import { Avatar, Helper, Spinner } from 'flowbite-svelte';
 	import { Textarea, Button } from 'flowbite-svelte';
@@ -65,15 +66,24 @@
 			}
 
 			let enhancedComment: CommentDoc | CommentType = payload;
-			if (event !== 'delete') {
+			if (event !== AppwriteEvent.DELETE) {
 				enhancedComment = await enhanceComment(payload);
 			}
 
 			switch (event) {
-				case 'create':
+				case AppwriteEvent.CREATE:
 					comments = [enhancedComment as CommentType, ...comments];
 					break;
-				case 'delete':
+
+				case AppwriteEvent.UPDATE:
+					comments = comments.map((commentItem) => {
+						if (commentItem.id === enhancedComment.id) {
+							return enhancedComment as CommentType;
+						}
+						return commentItem;
+					});
+					break;
+				case AppwriteEvent.DELETE:
 					comments = comments.filter((commentItem) => commentItem.id !== payload.$id);
 					break;
 			}

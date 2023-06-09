@@ -32,6 +32,7 @@ export const createNewComment = async (
 		body: formValues.body,
 		author: formValues.authorId,
 		taskId,
+		isEdited: false,
 	};
 
 	await db.createDocument(KRELLO_DB_ID, COMMENTS_COLLECTION_ID, docId, payload);
@@ -51,9 +52,17 @@ export const getComments = async (taskId: string): Promise<CommentType[]> => {
 		body: doc.body,
 		createdAt: doc.$createdAt,
 		author: getAuthor(doc.author, bulkUsers),
+		isEdited: doc.isEdited,
 	}));
 };
 
 export const deleteComment = async (commentId: string): Promise<void> => {
 	await db.deleteDocument(KRELLO_DB_ID, COMMENTS_COLLECTION_ID, commentId);
+};
+
+export const updateComment = async (commentId: string, commentBody: string): Promise<void> => {
+	await db.updateDocument(KRELLO_DB_ID, COMMENTS_COLLECTION_ID, commentId, {
+		body: commentBody,
+		isEdited: true,
+	});
 };
