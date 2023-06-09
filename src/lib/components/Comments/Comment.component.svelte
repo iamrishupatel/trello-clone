@@ -9,7 +9,7 @@
 	import type { AppwriteApiError } from '$types/error.types';
 	import type { UserDetails } from '$types/authStore';
 	import { authStore } from '$lib/store';
-	import EditComment from './Comments/EditComment.component.svelte';
+	import EditComment from './EditComment.component.svelte';
 
 	export let comment: CommentType;
 
@@ -32,6 +32,8 @@
 	};
 
 	let userDetails: UserDetails = $authStore.userDetails;
+	let isCurrentUserAnon: boolean = $authStore.isAnonymous;
+
 	let isEditingComment = false;
 	const openCommentEditor = (): void => {
 		isEditingComment = true;
@@ -69,7 +71,7 @@
 			<SvelteMarkdown source={comment.body ?? ''} />
 		</div>
 		<div class="flex items-center gap-x-2 -mt-2">
-			{#if comment.author.id === userDetails.id}
+			{#if comment.author.id === userDetails.id || comment.author.isAnonymous === isCurrentUserAnon}
 				<div class="flex gap-2 text-sm items-center">
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<p class="hover:underline cursor-pointer" on:click|stopPropagation={openCommentEditor}>
