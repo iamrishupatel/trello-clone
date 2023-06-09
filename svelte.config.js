@@ -33,6 +33,7 @@ const config = {
 			$store: 'src/lib/store',
 			$api: 'src/lib/api',
 			$factories: 'src/lib/factories',
+			$transformers: 'src/lib/transformers',
 		},
 	},
 };

@@ -1,6 +1,6 @@
 import { Client, Account, Databases, Storage } from 'appwrite';
 import { PUBLIC_API_ENDPOINT, PUBLIC_APP_PROJECT_ID } from '$env/static/public';
-import APPWRITE_CONST from '$lib/constants/appwrite.constants';
+import APPWRITE_CONST from '$constants/appwrite.constants';
 
 export const appwriteClient = new Client()
 	.setEndpoint(PUBLIC_API_ENDPOINT as string) // Your API Endpoint

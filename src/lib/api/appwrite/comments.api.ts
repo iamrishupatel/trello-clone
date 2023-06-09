@@ -1,11 +1,11 @@
-import APPWRITE_CONST from '$lib/constants/appwrite.constants';
-import type { CreateCommentFormValues } from '$lib/types/formValues';
-import type { CommentCreationPayload, CommentType } from '$lib/types/kanban';
+import APPWRITE_CONST from '$constants/appwrite.constants';
+import type { CreateCommentFormValues } from '$types/formValues';
+import type { CommentCreationPayload, CommentType } from '$types/kanban';
 import { Permission, Query } from 'appwrite';
 import { db } from './client';
 import { v4 as uuidv4 } from 'uuid';
 import { getBulkUserData } from './userDetails.api';
-import type { User } from '$lib/types/user';
+import type { User } from '$types/user';
 
 const { KRELLO_DB_ID, COMMENTS_COLLECTION_ID } = APPWRITE_CONST;
 

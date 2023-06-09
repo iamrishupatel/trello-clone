@@ -44,7 +44,10 @@
 			"$api/*": ["./src/lib/api/*"],
 
 			"$factories": ["./src/lib/factories"],
-			"$factories/*": ["./src/lib/factories/*"]
+			"$factories/*": ["./src/lib/factories/*"],
+
+			"$transformers": ["./src/lib/transformers"],
+			"$transformers/*": ["./src/lib/transformers/*"]
 		}
 	},
 	"include": [

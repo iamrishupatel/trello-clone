@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
-import { AuthStatus } from '$lib/enums/AuthStatus.enums';
-import type { AuthState } from '$lib/types/authStore';
+import { AuthStatus } from '$enums/AuthStatus.enums';
+import type { AuthState } from '$types/authStore';
 import { writable } from 'svelte/store';
 
 export const initialAuthStore: AuthState = {
