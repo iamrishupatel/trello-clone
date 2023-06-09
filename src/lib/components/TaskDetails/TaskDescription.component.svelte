@@ -33,8 +33,8 @@
 
 <div class="flex items-center gap-x-4">
 	<p class="flex items-center gap-x-2">
-		<Icon icon="basil:document-solid" />
-		Description
+		<Icon class="text-xl" icon="basil:document-solid" />
+		<span> Description </span>
 	</p>
 	{#if !isEditing && taskDescription}
 		<Button color="light" size="xs" on:click={openDescriptionEditor}>

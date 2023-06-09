@@ -16,6 +16,7 @@
 	import CoverUploader from './CoverUploader.component.svelte';
 	import { Status } from '$enums/Status.enums';
 	import toast from 'svelte-french-toast';
+	import TaskActivity from './TaskActivity.component.svelte';
 
 	export let taskDetails: Task | null,
 		isModalOpen = false;
@@ -78,7 +79,7 @@
 </script>
 
 {#if taskDetails}
-	<Modal bind:open={isModalOpen} size="lg" title="Task Details">
+	<Modal bind:open={isModalOpen} title="Task Details" size="lg" placement="center">
 		<div class="w-screen max-w-[900px] min-h-[50rem] relative flex flex-col gap-4">
 			{#if imageSrc}
 				<div class="relative border h-48">
@@ -168,6 +169,8 @@
 					<SelectLabel on:labelSelected={hanldeAddLabel} />
 				</section>
 			</div>
+
+			<TaskActivity taskId={taskDetails.id} />
 		</div>
 	</Modal>
 {/if}
