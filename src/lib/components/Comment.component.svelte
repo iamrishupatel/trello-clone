@@ -9,6 +9,7 @@
 	import type { AppwriteApiError } from '$types/error.types';
 	import type { UserDetails } from '$types/authStore';
 	import { authStore } from '$lib/store';
+	import EditComment from './Comments/EditComment.component.svelte';
 
 	export let comment: CommentType;
 
@@ -34,7 +35,9 @@
 	let isEditingComment = false;
 	const openCommentEditor = (): void => {
 		isEditingComment = true;
-		console.log(isEditingComment);
+	};
+	const closeCommentEditor = (): void => {
+		isEditingComment = false;
 	};
 </script>
 
@@ -43,24 +46,41 @@
 		<div class="w-fit flex gap-2">
 			<Avatar src={comment.author.displayPicture} rounded />
 			<div class="flex flex-col">
-				<p>{comment.author.name}</p>
+				<p>
+					<span>
+						{comment.author.name}
+					</span>
+					{#if comment.isEdited}
+						<span class="text-xs ml-1"><em>edited</em></span>
+					{/if}
+				</p>
 				<p class="text-xs">{moment(comment.createdAt).format('DD MMMM [at] hh:mm A')}</p>
 			</div>
 		</div>
-		{#if comment.author.id === userDetails.id || true}
-			<div class="flex gap-2 text-sm">
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<p class="hover:underline cursor-pointer" on:click|stopPropagation={openCommentEditor}>
-					<strong> Edit</strong>
-				</p>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<p class="hover:underline cursor-pointer" on:click|stopPropagation={hanldeDeleteComment}>
-					<strong> Delete </strong>
-				</p>
-			</div>
-		{/if}
 	</div>
-	<div class={`${styles.markdown} border px-4 bg-gray-50 rounded-lg`}>
-		<SvelteMarkdown source={comment.body ?? ''} />
-	</div>
+	{#if isEditingComment}
+		<EditComment
+			commentId={comment.id}
+			commentBody={comment.body}
+			on:closeCommentEditor={closeCommentEditor}
+		/>
+	{:else}
+		<div class={`${styles.markdown} border px-4 bg-gray-50 rounded-lg`}>
+			<SvelteMarkdown source={comment.body ?? ''} />
+		</div>
+		<div class="flex items-center gap-x-2 -mt-2">
+			{#if comment.author.id === userDetails.id}
+				<div class="flex gap-2 text-sm items-center">
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<p class="hover:underline cursor-pointer" on:click|stopPropagation={openCommentEditor}>
+						<strong> Edit</strong>
+					</p>
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<p class="hover:underline cursor-pointer" on:click|stopPropagation={hanldeDeleteComment}>
+						<strong> Delete </strong>
+					</p>
+				</div>
+			{/if}
+		</div>
+	{/if}
 </div>
