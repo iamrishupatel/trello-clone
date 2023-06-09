@@ -1,4 +1,4 @@
-import type { KanbanBoardData, Task } from '$types/kanban';
+import type { KanbanBoardData, Task } from '$lib/types/kanban';
 
 export function generateKanbanBoardFromTasks(tasks: Task[], allStatus: any[]): KanbanBoardData {
 	const emptykanbanBoard = allStatus.reduce((acc, status) => {

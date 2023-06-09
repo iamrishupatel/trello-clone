@@ -1,17 +1,17 @@
-import type { CreateAccountFormValues, LoginFormValues } from '$types/formValues';
+import type { CreateAccountFormValues, LoginFormValues } from '$lib/types/formValues';
 
 import { account, db } from './client';
 import { authStore } from '$lib/store';
 import { goto } from '$app/navigation';
 import { initialAuthStore } from '$lib/store/auth.store';
-import { AuthStatus } from '$enums/AuthStatus.enums';
-import APPWRITE_CONST from '$constants/appwrite.constants';
+import { AuthStatus } from '$lib/enums/AuthStatus.enums';
+import APPWRITE_CONST from '$lib/constants/appwrite.constants';
 import { v4 as uuidv4 } from 'uuid';
-import TEXT from '$constants/text.constants';
-import ROUTES from '$constants/routes.constants';
-import { APP_URL } from '$constants/app.constans';
+import TEXT from '$lib/constants/text.constants';
+import ROUTES from '$lib/constants/routes.constants';
+import { APP_URL } from '$lib/constants/app.constans';
 import toast from 'svelte-french-toast';
-import ERROR_TYPES from '$constants/error.constants';
+import ERROR_TYPES from '$lib/constants/error.constants';
 
 export const createAccount = async (values: CreateAccountFormValues): Promise<void> => {
 	/**

@@ -1,4 +1,4 @@
-import type { KanbanStore, Task } from '$types/kanban';
+import type { KanbanStore, Task } from '$lib/types/kanban';
 import { writable } from 'svelte/store';
 
 const initialKanbanStore: KanbanStore = {

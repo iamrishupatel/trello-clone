@@ -4,15 +4,15 @@ import type {
 	BoardStore,
 	CreateNewBoardFunc,
 	GetAllBoardFun,
-} from '$types/board';
+} from '$lib/types/board';
 import { db, storage } from './client';
 import { v4 as uuidv4 } from 'uuid';
-import APPWRITE_CONST from '$constants/appwrite.constants';
+import APPWRITE_CONST from '$lib/constants/appwrite.constants';
 import { Query } from 'appwrite';
 import boardStore from '$lib/store/boards.store';
 import toast from 'svelte-french-toast';
-import type { BoardDescriptionFormValues } from '$types/formValues';
-import TEXT from '$constants/text.constants';
+import type { BoardDescriptionFormValues } from '$lib/types/formValues';
+import TEXT from '$lib/constants/text.constants';
 import { getBulkUserData } from './userDetails.api';
 import { enhanceBoardData } from '$lib/transformers/board.transformer';
 

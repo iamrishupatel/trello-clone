@@ -1,4 +1,4 @@
-import type { BoardStore } from '$types/board';
+import type { BoardStore } from '$lib/types/board';
 import { writable } from 'svelte/store';
 
 export const initialBoardsStore: BoardStore = {

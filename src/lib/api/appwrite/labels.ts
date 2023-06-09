@@ -1,5 +1,5 @@
-import APPWRITE_CONST from '$constants/appwrite.constants';
-import type { CreateNewLabelFormValues } from '$types/formValues';
+import APPWRITE_CONST from '$lib/constants/appwrite.constants';
+import type { CreateNewLabelFormValues } from '$lib/types/formValues';
 import { v4 as uuidv4 } from 'uuid';
 
 import { db } from './client';

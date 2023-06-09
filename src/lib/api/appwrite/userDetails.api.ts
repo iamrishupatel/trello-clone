@@ -1,13 +1,13 @@
-import type { EditProfileValues } from '$types/formValues';
+import type { EditProfileValues } from '$lib/types/formValues';
 import { account, db, storage } from './client';
-import APPWRITE_CONST from '$constants/appwrite.constants';
+import APPWRITE_CONST from '$lib/constants/appwrite.constants';
 import { v4 as uuidv4 } from 'uuid';
 import { authStore } from '$lib/store';
-import type { AuthState, UserDetails } from '$types/authStore';
+import type { AuthState, UserDetails } from '$lib/types/authStore';
 import { goto } from '$app/navigation';
-import ROUTES from '$constants/routes.constants';
+import ROUTES from '$lib/constants/routes.constants';
 import toast from 'svelte-french-toast';
-import type { User } from '$types/user';
+import type { User } from '$lib/types/user';
 import { Query } from 'appwrite';
 
 const updateProfilePicture = async (file: File): Promise<string> => {

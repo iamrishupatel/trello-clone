@@ -1,12 +1,12 @@
-import APPWRITE_CONST from '$constants/appwrite.constants';
-import type { KanbanBoardData, TaskCreationPayload } from '$types/kanban';
+import APPWRITE_CONST from '$lib/constants/appwrite.constants';
+import type { KanbanBoardData, TaskCreationPayload } from '$lib/types/kanban';
 import { db, storage } from './client';
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'svelte-french-toast';
 import { enhanceTasksData } from '$lib/transformers/task.transformer';
 import { generateKanbanBoardFromTasks } from '$lib/factories/kanban.factories';
-import type { CreateNewTasksFormValues } from '$types/formValues';
-import type { CardLabel } from '$types/card';
+import type { CreateNewTasksFormValues } from '$lib/types/formValues';
+import type { CardLabel } from '$lib/types/card';
 
 // CONSTANTS USED
 const { KRELLO_DB_ID, TASK_COLLECTION_ID, STATUS_COLLECTION_ID } = APPWRITE_CONST;
