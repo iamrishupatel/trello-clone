@@ -1,4 +1,4 @@
-import APPWRITE_CONST from '$constants/appwrite.constants';
+import APPWRITE_CONST from '$lib/constants/appwrite.constants';
 import { db } from '$lib/api/appwrite/client';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';

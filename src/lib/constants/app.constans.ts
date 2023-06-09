@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { TaskPriority } from '$types/kanban';
+import type { TaskPriority } from '$lib/types/kanban';
 import { PUBLIC_APP_URL } from '$env/static/public';
 
 export const DEFAULT_BOARDS_PAGINATION_LIMIT = 100;

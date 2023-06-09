@@ -1,9 +1,8 @@
 import type { CreateAccountFormValues, LoginFormValues } from '$types/formValues';
-
 import { account, db } from './client';
-import { authStore } from '$lib/store';
+import { authStore } from '$store';
 import { goto } from '$app/navigation';
-import { initialAuthStore } from '$lib/store/auth.store';
+import { initialAuthStore } from '$store/auth.store';
 import { AuthStatus } from '$enums/AuthStatus.enums';
 import APPWRITE_CONST from '$constants/appwrite.constants';
 import { v4 as uuidv4 } from 'uuid';

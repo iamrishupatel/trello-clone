@@ -1,6 +1,6 @@
-import { TASK_PRIORITIES } from '$constants/app.constans';
-import type { CardLabel } from '$types/card';
-import type { TaskStatus, TaskPriority } from '$types/kanban';
+import { TASK_PRIORITIES } from '$lib/constants/app.constans';
+import type { CardLabel } from '$lib/types/card';
+import type { TaskStatus, TaskPriority } from '$lib/types/kanban';
 
 export const getTaskStatus = (allStatus: any[], id: string): TaskStatus => {
 	const { $id, text } = allStatus.find((status) => status.$id === id);

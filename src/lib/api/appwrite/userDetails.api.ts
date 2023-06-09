@@ -2,7 +2,7 @@ import type { EditProfileValues } from '$types/formValues';
 import { account, db, storage } from './client';
 import APPWRITE_CONST from '$constants/appwrite.constants';
 import { v4 as uuidv4 } from 'uuid';
-import { authStore } from '$lib/store';
+import { authStore } from '$store';
 import type { AuthState, UserDetails } from '$types/authStore';
 import { goto } from '$app/navigation';
 import ROUTES from '$constants/routes.constants';

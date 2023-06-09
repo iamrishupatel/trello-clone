@@ -1,5 +1,5 @@
-import { enhanceSingleTask } from '$lib/transformers/task.transformer';
-import { addNewTaskInStore, removeTaskFromStore, updateTask } from '$lib/store/kanbanBoard.store';
+import { enhanceSingleTask } from '$transformers/task.transformer';
+import { addNewTaskInStore, removeTaskFromStore, updateTask } from '$store/kanbanBoard.store';
 import APPWRITE_CONST from '$constants/appwrite.constants';
 import { db } from './client';
 

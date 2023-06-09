@@ -3,8 +3,8 @@ import type { KanbanBoardData, TaskCreationPayload } from '$types/kanban';
 import { db, storage } from './client';
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'svelte-french-toast';
-import { enhanceTasksData } from '$lib/transformers/task.transformer';
-import { generateKanbanBoardFromTasks } from '$lib/factories/kanban.factories';
+import { enhanceTasksData } from '$transformers/task.transformer';
+import { generateKanbanBoardFromTasks } from '$factories/kanban.factories';
 import type { CreateNewTasksFormValues } from '$types/formValues';
 import type { CardLabel } from '$types/card';
 
