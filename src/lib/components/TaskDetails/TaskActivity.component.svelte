@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Comment from '$components/Comment.component.svelte';
+	import Comment from '$components/Comments/Comment.component.svelte';
 	import APPWRITE_CONST from '$constants/appwrite.constants';
 	import { AppwriteEvent } from '$enums/Events.enums';
 	import { Status } from '$enums/Status.enums';
@@ -23,6 +23,7 @@
 	export let taskId: string;
 
 	let userDetails: UserDetails = $authStore.userDetails;
+	let isAnonymous: boolean = $authStore.isAnonymous;
 
 	authStore.subscribe((authStore: AuthState) => {
 		if (authStore.userDetails) {
@@ -39,7 +40,7 @@
 		validationSchema: createCommentValidationSchema,
 		onSubmit: async (values) => {
 			try {
-				await createNewComment(taskId, values);
+				await createNewComment(taskId, values, isAnonymous);
 				handleReset();
 			} catch (e) {
 				console.log(e);

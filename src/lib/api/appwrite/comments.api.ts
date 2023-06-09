@@ -1,7 +1,7 @@
 import APPWRITE_CONST from '$constants/appwrite.constants';
 import type { CreateCommentFormValues } from '$types/formValues';
 import type { CommentCreationPayload, CommentType } from '$types/kanban';
-import { Query } from 'appwrite';
+import { Permission, Query } from 'appwrite';
 import { db } from './client';
 import { v4 as uuidv4 } from 'uuid';
 import { getBulkUserData } from './userDetails.api';
@@ -25,6 +25,7 @@ const getAuthor = (id: string, bulkUser: User[]): User => {
 export const createNewComment = async (
 	taskId: string,
 	formValues: CreateCommentFormValues,
+	isAnonymous: boolean,
 ): Promise<void> => {
 	const docId = uuidv4();
 
@@ -35,7 +36,15 @@ export const createNewComment = async (
 		isEdited: false,
 	};
 
-	await db.createDocument(KRELLO_DB_ID, COMMENTS_COLLECTION_ID, docId, payload);
+	if (!isAnonymous) {
+		await db.createDocument(KRELLO_DB_ID, COMMENTS_COLLECTION_ID, docId, payload);
+	} else {
+		await db.createDocument(KRELLO_DB_ID, COMMENTS_COLLECTION_ID, docId, payload, [
+			Permission.read('any'),
+			Permission.update('any'),
+			Permission.delete('any'),
+		]);
+	}
 };
 
 export const getComments = async (taskId: string): Promise<CommentType[]> => {
