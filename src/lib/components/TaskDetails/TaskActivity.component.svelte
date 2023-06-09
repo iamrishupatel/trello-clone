@@ -59,16 +59,22 @@
 			const event = extractEventFromString(res.events[0]);
 
 			const payload = res.payload as CommentDoc;
-			const commentTasKId = payload?.taskId ?? '';
-			if (commentTasKId !== taskId) {
+			const commentTaskId = payload?.taskId ?? '';
+			if (commentTaskId !== taskId) {
 				return;
 			}
 
-			const enhancedComment = await enhanceComment(payload);
+			let enhancedComment: CommentDoc | CommentType = payload;
+			if (event !== 'delete') {
+				enhancedComment = await enhanceComment(payload);
+			}
 
 			switch (event) {
 				case 'create':
-					comments = [enhancedComment, ...comments];
+					comments = [enhancedComment as CommentType, ...comments];
+					break;
+				case 'delete':
+					comments = comments.filter((commentItem) => commentItem.id !== payload.$id);
 					break;
 			}
 		});

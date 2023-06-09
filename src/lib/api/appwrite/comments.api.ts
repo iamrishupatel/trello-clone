@@ -9,6 +9,19 @@ import type { User } from '$types/user';
 
 const { KRELLO_DB_ID, COMMENTS_COLLECTION_ID } = APPWRITE_CONST;
 
+const getAuthor = (id: string, bulkUser: User[]): User => {
+	const userData = bulkUser.find((user) => user.id === id);
+	if (userData) return userData;
+
+	return {
+		isAnonymous: true,
+		displayPicture: '',
+		email: 'anonymous@rlabs.dev',
+		id: uuidv4(),
+		name: 'Anonymous User',
+	};
+};
+
 export const createNewComment = async (
 	taskId: string,
 	formValues: CreateCommentFormValues,
@@ -41,15 +54,6 @@ export const getComments = async (taskId: string): Promise<CommentType[]> => {
 	}));
 };
 
-const getAuthor = (id: string, bulkUser: User[]): User => {
-	const userData = bulkUser.find((user) => user.id === id);
-	if (userData) return userData;
-
-	return {
-		isAnonymous: true,
-		displayPicture: '',
-		email: 'anonymous@rlabs.dev',
-		id: uuidv4(),
-		name: 'Anonymous User',
-	};
+export const deleteComment = async (commentId: string): Promise<void> => {
+	await db.deleteDocument(KRELLO_DB_ID, COMMENTS_COLLECTION_ID, commentId);
 };
