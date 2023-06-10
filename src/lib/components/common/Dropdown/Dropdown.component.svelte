@@ -48,7 +48,6 @@
 		z-index: 20;
 		right: 0;
 		width: max-content;
-		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
 	}
 
 	.dropDownWrapper.active {

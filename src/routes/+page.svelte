@@ -6,9 +6,12 @@
 	import type { PageData } from './$types';
 	import boardStore from '$lib/store/boards.store';
 	import Masonry from '$components/Layouts/Masonry.component.svelte';
+	import BoardFilter from '$components/BoardFilter.component.svelte';
+	import { onDestroy } from 'svelte';
 
 	export let data: PageData;
 	let boards = data.boards;
+	$: filteredBoards = data.boards;
 
 	let isModalOpen = false;
 
@@ -16,10 +19,17 @@
 		isModalOpen = true;
 	};
 
-	boardStore.subscribe((boardsData) => {
+	const unsub = boardStore.subscribe((boardsData) => {
 		boards = boardsData.boards;
 		isModalOpen = boardsData.isCreateBoardModalOpen;
 	});
+
+	onDestroy(unsub);
+
+	const hanldeApplyFilter = (e: CustomEvent): void => {
+		const filterValues: string[] = e.detail;
+		console.log(filterValues);
+	};
 </script>
 
 <title>All Boards | Krello</title>
@@ -29,12 +39,15 @@
 		<div class="">
 			<header class="flex items-center justify-between gap-2 px-4">
 				<h1 class="text-xl md:text-2xl font-bold">All Boards</h1>
-				<Button on:click={openModel}>New</Button>
+				<div class="flex items-center gap-x-2">
+					<BoardFilter on:change={hanldeApplyFilter} />
+					<Button on:click={openModel}>New</Button>
+				</div>
 			</header>
 
 			<section class="mt-8">
 				<Masonry gridGap={'1rem'} colWidth={'minmax(Min(22rem, 100%), 1fr)'} items={boards}>
-					{#each boards as board}
+					{#each filteredBoards as board}
 						<div>
 							<Card
 								cardTitle={board.name}
