@@ -31,8 +31,6 @@
 		onSubmit: async (values) => {
 			await updateTaskDescription(taskId, values.description, currentBoard.id);
 		},
-		// FIXME:
-		// validationSchema: ,
 	});
 
 	const handleCancel = (): void => {

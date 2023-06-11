@@ -8,9 +8,10 @@
 	export let taskId: string, title: string;
 
 	let currentBoard: Board;
-	boardStore.subscribe((store) => {
+	const unsub = boardStore.subscribe((store) => {
 		currentBoard = store.currentBoard as Board;
 	});
+	onDestroy(unsub);
 
 	let isEditing = false;
 	let taskInputTitle = title;

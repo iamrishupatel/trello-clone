@@ -241,6 +241,6 @@ const checkForBoardAccess = async (boardId: string): Promise<void> => {
 		} else {
 			toast.error(e.message);
 		}
-		throw new Error('ACCCESS DENIED');
+		throw new Error(error);
 	}
 };

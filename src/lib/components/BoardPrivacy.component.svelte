@@ -10,12 +10,15 @@
 	import { Status } from '$lib/enums/Status.enums';
 	import toast from 'svelte-french-toast';
 	import boardStore from '$lib/store/boards.store';
+	import { onDestroy } from 'svelte';
 
 	let boardData: Board;
 
-	boardStore.subscribe((store) => {
+	const unsubFromBoard = boardStore.subscribe((store) => {
 		boardData = store.currentBoard as Board;
 	});
+
+	onDestroy(unsubFromBoard);
 
 	const isAnonymous: boolean = $authStore.isAnonymous;
 	const currentUser: UserDetails = $authStore.userDetails;
