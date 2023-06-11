@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import ROUTES from '$lib/constants/routes.constants';
 	import Icon from '@iconify/svelte';
 	import { Button } from 'flowbite-svelte';
