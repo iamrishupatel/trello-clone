@@ -99,9 +99,11 @@ export const updateTaskStatus = async (
 			prevStatusId,
 		});
 	} catch (e) {
+		const error = e as AppwriteApiError;
 		// FIXME: handle errors
 		// remove permissions to mimic errors
-		console.log(e);
+		toast.error(error.message);
+		console.log(error);
 	}
 };
 
@@ -167,7 +169,7 @@ export const addLabelInTask = async (
 		});
 		toast.success('Task updated successfully');
 	} catch (e) {
-		toast.error('Unable to update task description');
+		toast.error('Unable to update task label');
 		console.error(e);
 	}
 };
@@ -185,7 +187,7 @@ export const removeLabelInTask = async (
 		});
 		toast.success('Task updated successfully');
 	} catch (e) {
-		toast.error('Unable to update task description');
+		toast.error('Unable to update task label');
 		console.error(e);
 	}
 };
