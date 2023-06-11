@@ -2,8 +2,16 @@
 	import { onDestroy, onMount, tick } from 'svelte';
 	import lodash from 'lodash';
 	import { updateTaskTitle } from '$lib/api/appwrite/tasks.api';
+	import type { Board } from '$lib/types/board';
+	import boardStore from '$lib/store/boards.store';
 
 	export let taskId: string, title: string;
+
+	let currentBoard: Board;
+	const unsub = boardStore.subscribe((store) => {
+		currentBoard = store.currentBoard as Board;
+	});
+	onDestroy(unsub);
 
 	let isEditing = false;
 	let taskInputTitle = title;
@@ -39,7 +47,7 @@
 	const hanldeTaskTitleChange = (e: Event): void => {
 		const target = e.target as HTMLInputElement;
 
-		const update = updateTaskTitle.bind(null, taskId, target.value);
+		const update = updateTaskTitle.bind(null, taskId, target.value, currentBoard.id);
 		lodash.debounce(update, 100)();
 	};
 </script>

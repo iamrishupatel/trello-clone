@@ -17,20 +17,30 @@
 	import { Status } from '$enums/Status.enums';
 	import toast from 'svelte-french-toast';
 	import TaskActivity from './TaskActivity.component.svelte';
+	import { onDestroy } from 'svelte';
+	import type { Board } from '$lib/types/board';
+	import boardStore from '$lib/store/boards.store';
 
 	export let taskDetails: Task | null,
 		isModalOpen = false;
 
+	let currentBoard: Board;
+	const unsub = boardStore.subscribe((store) => {
+		currentBoard = store.currentBoard as Board;
+	});
+
+	onDestroy(unsub);
+
 	const hanldeAddLabel = async (e: CustomEvent): Promise<void> => {
 		if (!taskDetails) return;
 		const newLabel = e.detail as CardLabel;
-		await addLabelInTask(taskDetails.id, newLabel.id, taskDetails.labels);
+		await addLabelInTask(taskDetails.id, newLabel.id, taskDetails.labels, currentBoard.id);
 	};
 	const hanldeRemoveLabel = async (e: MouseEvent): Promise<void> => {
 		if (!taskDetails) return;
 
 		const removedLabelId = (e.currentTarget as HTMLButtonElement).id;
-		await removeLabelInTask(taskDetails?.id, removedLabelId, taskDetails.labels);
+		await removeLabelInTask(taskDetails?.id, removedLabelId, taskDetails.labels, currentBoard.id);
 	};
 
 	// file uploads
@@ -66,7 +76,7 @@
 		coverUplaodStatus = Status.LOADING;
 		try {
 			if (taskDetails && taskDetails.id && imageFile) {
-				await updateTaskCoverUrl(taskDetails?.id, imageFile);
+				await updateTaskCoverUrl(taskDetails?.id, imageFile, currentBoard.id);
 			}
 			toast.success('Cover updated successfully');
 		} catch (e: any) {
