@@ -22,18 +22,42 @@
 		hanldeTaskDeleteEvent,
 		hanldeTaskUpdateEvent,
 	} from '$lib/api/appwrite/eventHandlers';
+	import BoardPrivacy from '$components/BoardPrivacy.component.svelte';
+	import { authStore } from '$lib/store';
+	import type { AuthState } from '$lib/types/authStore';
+	import ERROR_TYPES from '$lib/constants/error.constants';
+	import type { AppwriteApiError } from '$lib/types/error.types';
+	import ErrorDisplay from '$components/common/ErrorDisplay.component.svelte';
 
 	export let data: PageData;
 
 	let boardData: Board;
 	let kanbanBoard: KanbanBoardData;
 	let isboardDataLoading = true;
+	let errorInBoard = '';
 	let isMenuClosed = true;
+	let authDetails: AuthState;
 	let unsub: () => void;
+
+	authStore.subscribe((store) => {
+		authDetails = store;
+	});
 
 	onMount(async () => {
 		try {
 			boardData = await getBoardData(data.boardId);
+			// Check if the board is private and the current user is not a member
+			// If so, display an access denied message immediately and stop further processing
+			if (
+				boardData.isPrivate &&
+				!boardData.members.some((member) => {
+					return member.id === authDetails.userDetails?.id;
+				})
+			) {
+				errorInBoard = ERROR_TYPES.ACCESS_DENIED;
+				throw new Error(ERROR_TYPES.ACCESS_DENIED);
+			}
+
 			boardStore.update((prevState) => ({
 				...prevState,
 				currentBoard: boardData,
@@ -63,9 +87,12 @@
 						break;
 				}
 			});
-		} catch (e) {
-			// HANDLE ERROR
+		} catch (error) {
+			const e = error as AppwriteApiError;
 			console.error(e);
+			if (e.type === ERROR_TYPES.DOCUMENT_NOT_FOUND) {
+				errorInBoard = ERROR_TYPES.DOCUMENT_NOT_FOUND;
+			}
 		} finally {
 			isboardDataLoading = false;
 		}
@@ -87,60 +114,56 @@
 			unsub();
 		}
 	});
+
+	console.log({ errorInBoard });
 </script>
 
-<AuthGuard>
-	<title>{`${data.boardDoc.name ?? ''} | Krello`}</title>
-	<main class="board-page flex flex-col mx-auto px-2 sm:px-0">
-		{#if isboardDataLoading}
-			<div class="min-h-screen flex items-center justify-center -mt-20">
-				<Spinner currentFill="#ef562f" />
-			</div>
-		{:else}
-			<header class="flex my-4 gap-x-4 container mx-auto">
-				<Button color="light">
-					{#if boardData.isPrivate}
-						<span class="flex items-center gap-x-2">
-							<Icon icon="ic:round-lock" />
-							<span> Private </span>
-						</span>
-					{:else}
-						<span class="flex items-center gap-x-2">
-							<Icon icon="subway:world-1" />
-							<span> Public </span>
-						</span>
-					{/if}
-				</Button>
-				{#each boardData.members as member}
-					<Avatar src={member.displayPicture} rounded />
-				{/each}
+{#if errorInBoard === ERROR_TYPES.ACCESS_DENIED || errorInBoard === ERROR_TYPES.DOCUMENT_NOT_FOUND}
+	<ErrorDisplay
+		errorDescription="Sorry, the page you are looking for cannot be found or you do not have permission to view it."
+	/>
+{:else}
+	<AuthGuard>
+		<main class="board-page flex flex-col mx-auto px-2 sm:px-0">
+			{#if isboardDataLoading}
+				<div class="min-h-screen flex items-center justify-center -mt-20">
+					<Spinner currentFill="#ef562f" />
+				</div>
+			{:else}
+				<title>{`${boardData.name ?? ''} | Krello`}</title>
+				<header class="flex my-4 gap-x-4 container mx-auto">
+					<BoardPrivacy />
+					{#each boardData.members as member}
+						<Avatar src={member.displayPicture} rounded />
+					{/each}
 
-				<NewTask>
-					<Icon icon="material-symbols:add" />
-					<span class="ml-2">Add new task</span>
-				</NewTask>
+					<NewTask>
+						<Icon icon="material-symbols:add" />
+						<span class="ml-2">Add new task</span>
+					</NewTask>
 
-				<Button color="alternative" on:click={openMenu}>
-					<Icon icon="mingcute:dot-grid-fill" />
-					<span class="ml-2"> Menu </span>
-				</Button>
-			</header>
+					<Button color="alternative" on:click={openMenu}>
+						<Icon icon="mingcute:dot-grid-fill" />
+						<span class="ml-2"> Menu </span>
+					</Button>
+				</header>
 
-			<!-- TASK MANAGEMENT -->
-			<KanbanBoard />
+				<!-- TASK MANAGEMENT -->
+				<KanbanBoard />
 
-			<Drawer
-				placement="right"
-				width="max-w-[720px] w-full md:w-3/4"
-				bind:hidden={isMenuClosed}
-				transitionType="fly"
-				{transitionParams}
-			>
-				<BoardDescription bind:isMenuClosed />
-			</Drawer>
-		{/if}
-	</main>
-</AuthGuard>
+				<Drawer
+					placement="right"
+					width="max-w-[720px] w-full md:w-3/4"
+					bind:hidden={isMenuClosed}
+					transitionType="fly"
+					{transitionParams}
+				>
+					<BoardDescription bind:isMenuClosed />
+				</Drawer>
+			{/if}
+		</main>
+	</AuthGuard>
+{/if}
 
 <style>
 	.board-page {

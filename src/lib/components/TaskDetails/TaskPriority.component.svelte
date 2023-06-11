@@ -1,11 +1,21 @@
 <script lang="ts">
 	import { TASK_PRIORITIES } from '$constants/app.constans';
 	import { updateTaskPriority } from '$lib/api/appwrite/tasks.api';
+	import boardStore from '$lib/store/boards.store';
+	import type { Board } from '$lib/types/board';
 	import type { TaskPriority } from '$types/kanban';
 	import { Select } from 'flowbite-svelte';
+	import { onDestroy } from 'svelte';
 
 	export let taskId: string;
 	export let priority: TaskPriority | null;
+
+	let currentBoard: Board;
+	const unsub = boardStore.subscribe((store) => {
+		currentBoard = store.currentBoard as Board;
+	});
+
+	onDestroy(unsub);
 
 	const items = TASK_PRIORITIES.map((priority) => ({
 		name: priority.text.toLocaleUpperCase(),
@@ -16,7 +26,7 @@
 
 	const hanldeChange = async (e: Event): Promise<void> => {
 		const target = e.target as HTMLSelectElement;
-		await updateTaskPriority(taskId, target.value);
+		await updateTaskPriority(taskId, target.value, currentBoard.id);
 	};
 </script>
 

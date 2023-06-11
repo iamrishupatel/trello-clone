@@ -8,13 +8,15 @@ import type {
 import { db, storage } from './client';
 import { v4 as uuidv4 } from 'uuid';
 import APPWRITE_CONST from '$constants/appwrite.constants';
-import { Query } from 'appwrite';
+import { Permission, Query, Role } from 'appwrite';
 import boardStore from '$store/boards.store';
 import toast from 'svelte-french-toast';
 import type { BoardDescriptionFormValues } from '$types/formValues';
 import TEXT from '$constants/text.constants';
 import { getBulkUserData } from './userDetails.api';
 import { enhanceBoardData } from '$transformers/board.transformer';
+
+const { KRELLO_DB_ID, BOARDS_COLLECTION_ID } = APPWRITE_CONST;
 
 const uploadBoardCover = async (file: File): Promise<string> => {
 	const fileId = uuidv4();
@@ -48,12 +50,23 @@ export const createNewBoard: CreateNewBoardFunc = async (data, isAnonymous, hanl
 			description: TEXT.DEFAULT_BOARD_DESCRIPTION,
 		};
 
+		const permissions: string[] = [];
+		if (boardCreationPayload.isPrivate) {
+			permissions.push(Permission.read(Role.user(data.owner)));
+			permissions.push(Permission.update(Role.user(data.owner)));
+			permissions.push(Permission.delete(Role.user(data.owner)));
+		} else {
+			permissions.push(Permission.read('any'));
+			permissions.push(Permission.update('any'));
+		}
+
 		// Create a new board document
 		const boardDoc = await db.createDocument(
 			APPWRITE_CONST.KRELLO_DB_ID,
 			APPWRITE_CONST.BOARDS_COLLECTION_ID,
 			docId,
 			boardCreationPayload,
+			permissions,
 		);
 
 		// add the board in the current users boards
@@ -157,17 +170,13 @@ export const getAllBoards: GetAllBoardFun = async (userId, lastId, limit) => {
 };
 
 export const getBoardData = async (boardId: string): Promise<Board> => {
-	let boardData;
-	try {
-		const [boardDoc, bulkUsers] = await Promise.all([
-			db.getDocument(APPWRITE_CONST.KRELLO_DB_ID, APPWRITE_CONST.BOARDS_COLLECTION_ID, boardId),
-			getBulkUserData(),
-		]);
+	const [boardDoc, bulkUsers] = await Promise.all([
+		db.getDocument(APPWRITE_CONST.KRELLO_DB_ID, APPWRITE_CONST.BOARDS_COLLECTION_ID, boardId),
+		getBulkUserData(),
+	]);
 
-		boardData = enhanceBoardData(boardDoc, bulkUsers);
-	} catch (e) {
-		console.error(e);
-	}
+	const boardData = enhanceBoardData(boardDoc, bulkUsers);
+
 	return boardData as Board;
 };
 
@@ -201,4 +210,32 @@ export const updateBoardDescription = async (values: BoardDescriptionFormValues)
 		toast.error(e.message);
 		console.log(e);
 	}
+};
+
+export const updateBoardPrivacy = async (board: Board, isPrivate: boolean): Promise<void> => {
+	const memberIds = board.members.map((member) => member.id);
+	const permissions: string[] = [];
+
+	// if we are marking this as private
+	// then only members of this board
+	//  should have read and update permissions
+	if (isPrivate) {
+		memberIds.forEach((id) => {
+			permissions.push(Permission.read(Role.user(id)));
+			permissions.push(Permission.update(Role.user(id)));
+		});
+	} else {
+		permissions.push(Permission.read('any'));
+		permissions.push(Permission.update('any'));
+	}
+
+	await db.updateDocument(
+		KRELLO_DB_ID,
+		BOARDS_COLLECTION_ID,
+		board.id,
+		{
+			isPrivate,
+		},
+		permissions,
+	);
 };

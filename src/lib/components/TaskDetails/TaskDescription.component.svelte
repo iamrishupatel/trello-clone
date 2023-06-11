@@ -5,10 +5,20 @@
 	import styles from '$sass/markdown.module.scss';
 	import SvelteMarkdown from 'svelte-markdown';
 	import { updateTaskDescription } from '$lib/api/appwrite/tasks.api';
+	import { onDestroy } from 'svelte';
+	import type { Board } from '$lib/types/board';
+	import boardStore from '$lib/store/boards.store';
 
 	export let taskDescription = '',
 		taskId: string;
 	let isEditing = false;
+
+	let currentBoard: Board;
+	const unsub = boardStore.subscribe((store) => {
+		currentBoard = store.currentBoard as Board;
+	});
+
+	onDestroy(unsub);
 
 	const openDescriptionEditor = (): void => {
 		isEditing = true;
@@ -19,7 +29,7 @@
 			description: taskDescription ?? '',
 		},
 		onSubmit: async (values) => {
-			await updateTaskDescription(taskId, values.description);
+			await updateTaskDescription(taskId, values.description, currentBoard.id);
 		},
 		// FIXME:
 		// validationSchema: ,

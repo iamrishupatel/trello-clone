@@ -4,6 +4,7 @@
 
 	export let isDropdownOpen: boolean;
 	export let dropdownClass = '';
+	export let placement: 'left' | 'right' = 'right';
 
 	let dropdownEl: HTMLDivElement;
 
@@ -13,6 +14,8 @@
 			isDropdownOpen = false;
 		}
 	}
+
+	let placementClass = `placement-${placement}`;
 
 	onMount(() => {
 		window.addEventListener('click', handleClick);
@@ -29,6 +32,7 @@
 		class={classnames({
 			dropDownWrapper: true,
 			active: isDropdownOpen,
+			placementClass,
 		})}
 	>
 		<div class={classnames('dropdown', dropdownClass)}>
@@ -44,11 +48,19 @@
 		overflow: hidden;
 		transition: grid-template-rows 200ms;
 		position: absolute;
-		top: 100%;
 		z-index: 20;
-		right: 0;
 		width: max-content;
 		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+	}
+
+	.placement-right {
+		top: 100%;
+		right: 0;
+	}
+
+	.placement-left {
+		top: 100%;
+		left: 0;
 	}
 
 	.dropDownWrapper.active {

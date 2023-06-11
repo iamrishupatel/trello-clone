@@ -7,6 +7,8 @@
 	import { onDestroy } from 'svelte';
 	import NewTask from '../NewTask/NewTask.component.svelte';
 	import TaskDetails from '$components/TaskDetails/TaskDetails.component.svelte';
+	import type { Board } from '$lib/types/board';
+	import boardStore from '$lib/store/boards.store';
 
 	export let title = '',
 		tasks: Task[] = [],
@@ -15,6 +17,11 @@
 	let kanbanData: KanbanBoardData;
 	let showTaskModal = false;
 	let selectedTask: Task | null = null;
+	let currentBoard: Board;
+
+	const unsubFromBoardStore = boardStore.subscribe((store) => {
+		currentBoard = store.currentBoard as Board;
+	});
 
 	const handleDrawerOpen = (task: Task): void => {
 		showTaskModal = true;
@@ -23,7 +30,10 @@
 
 	const unsub = kanbanStore.subscribe((store) => (kanbanData = store.kanbanBoard));
 
-	onDestroy(unsub);
+	onDestroy(() => {
+		unsub();
+		unsubFromBoardStore();
+	});
 
 	async function handleDrop(event: any): Promise<void> {
 		event.preventDefault();
@@ -72,7 +82,7 @@
 		 * and display the error message
 		 */
 
-		await updateTaskStatus(currentCard.id, destinationColumnId, sourceColumnId);
+		await updateTaskStatus(currentCard.id, destinationColumnId, sourceColumnId, currentBoard.id);
 	}
 
 	function allowDrop(event: any): void {

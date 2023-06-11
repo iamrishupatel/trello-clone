@@ -1,11 +1,19 @@
 <script lang="ts">
 	import { updateTaskStatus } from '$lib/api/appwrite/tasks.api';
 	import { kanbanStore } from '$lib/store';
+	import boardStore from '$lib/store/boards.store';
+	import type { Board } from '$lib/types/board';
 	import type { TaskStatus } from '$types/kanban';
 	import { Select } from 'flowbite-svelte';
 	import { onDestroy } from 'svelte';
 	export let taskId: string;
 	export let status: TaskStatus;
+
+	let currentBoard: Board;
+
+	const unsubFromBoardStore = boardStore.subscribe((store) => {
+		currentBoard = store.currentBoard as Board;
+	});
 
 	let items: { name: string; value: string }[];
 	const unsub = kanbanStore.subscribe((store) => {
@@ -15,11 +23,14 @@
 		}));
 	});
 
-	onDestroy(unsub);
+	onDestroy(() => {
+		unsub();
+		unsubFromBoardStore();
+	});
 
 	const hanldeChange = async (e: Event): Promise<void> => {
 		const target = e.target as HTMLSelectElement;
-		await updateTaskStatus(taskId, target.value, status.id);
+		await updateTaskStatus(taskId, target.value, status.id, currentBoard.id);
 	};
 </script>
 
