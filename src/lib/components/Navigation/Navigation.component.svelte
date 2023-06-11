@@ -84,7 +84,7 @@
 
 	<div>
 		<div class="flex items-center md:order-2 gap-x-2 cursor-pointer" id="avatar-menu">
-			<Avatar size="md" src={displayPictureURL} rounded border />
+			<Avatar size="md" src={displayPictureURL} rounded />
 			<p class="truncate hidden md:flexs max-w-[140px]">{$authStore.userDetails.name}</p>
 			<Icon icon="mdi:caret-down" />
 		</div>

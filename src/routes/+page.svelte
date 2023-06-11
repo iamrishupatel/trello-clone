@@ -33,7 +33,7 @@
 			</header>
 
 			<section class="mt-8">
-				<Masonry gridGap={'1rem'} colWidth={'minmax(Min(22rem, 100%), 1fr)'} items={boards}>
+				<Masonry gridGap={'1rem'} colWidth={'22rem'} items={boards}>
 					{#each boards as board}
 						<div>
 							<Card
