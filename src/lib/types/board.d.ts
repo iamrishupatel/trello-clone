@@ -13,15 +13,18 @@ export type Board = {
 	id: string;
 	coverURL?: string;
 	name: string;
-	owner: BoardMember;
+	owner: User;
 	members: Array<BoardMember>;
 	isPrivate: boolean;
 	labels?: CardLabel[];
 	description: string;
 	createdAt: string;
+	teamId: string;
 };
 
-export type BoardMember = User;
+export type BoardMember = User & {
+	membershipId: string;
+};
 
 export type BoardStore = {
 	boards: Board[];
@@ -37,6 +40,7 @@ export type BoardCreationPayload = {
 	isPrivate: boolean;
 	coverURL?: string;
 	description: string;
+	teamId: string;
 };
 
 export type CreateNewBoardFunc = (
