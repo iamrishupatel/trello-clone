@@ -1,6 +1,6 @@
 <script lang="ts">
 	import AuthGuard from '$components/Auth/AuthGuard.component.svelte';
-	import { Avatar, Button, Drawer, Spinner } from 'flowbite-svelte';
+	import { Button, Drawer, Spinner } from 'flowbite-svelte';
 	import type { PageData } from './$types';
 	import { onDestroy, onMount } from 'svelte';
 	import { getBoardData } from '$lib/api/appwrite/boards.api';
@@ -28,6 +28,8 @@
 	import ERROR_TYPES from '$lib/constants/error.constants';
 	import type { AppwriteApiError } from '$lib/types/error.types';
 	import ErrorDisplay from '$components/common/ErrorDisplay.component.svelte';
+	import AddMember from '$components/Members/AddMember.component.svelte';
+	import Members from '$components/Members/Members.component.svelte';
 
 	export let data: PageData;
 
@@ -114,8 +116,6 @@
 			unsub();
 		}
 	});
-
-	console.log({ errorInBoard });
 </script>
 
 {#if errorInBoard === ERROR_TYPES.ACCESS_DENIED || errorInBoard === ERROR_TYPES.DOCUMENT_NOT_FOUND}
@@ -133,9 +133,12 @@
 				<title>{`${boardData.name ?? ''} | Krello`}</title>
 				<header class="flex my-4 gap-x-4 container mx-auto">
 					<BoardPrivacy />
-					{#each boardData.members as member}
-						<Avatar src={member.displayPicture} rounded />
-					{/each}
+
+					<Members {boardData} />
+
+					{#if !authDetails.isAnonymous && boardData.owner.id === authDetails.userDetails?.id && boardData.isPrivate}
+						<AddMember />
+					{/if}
 
 					<NewTask>
 						<Icon icon="material-symbols:add" />

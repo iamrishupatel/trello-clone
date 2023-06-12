@@ -65,7 +65,7 @@ export const createAccount = async (values: CreateAccountFormValues): Promise<vo
 			},
 		});
 
-		await goto(ROUTES.HOME);
+		await goto(ROUTES.HOME); // FIXME: CHECK THIS TO FIX REDIRECT ISSUE
 	} catch (e: any) {
 		// handle user already exists error
 

@@ -22,6 +22,7 @@
 	import { updateBoardDescription } from '$lib/api/appwrite/boards.api';
 	import { authStore } from '$lib/store';
 	import { boardDescriptionFormSchema } from '$lib/validations/board.validations';
+	import TeamMember from './TeamMember.component.svelte';
 
 	export let isMenuClosed: boolean;
 
@@ -177,22 +178,7 @@
 	{#if board.isPrivate}
 		{#if board && board.members}
 			{#each board.members as member}
-				<div class="flex items-center gap-x-4">
-					<Avatar src={member.displayPicture} rounded size="sm" alt={member.name} />
-					<p>{member.name}</p>
-
-					<!-- ADMIN BADGE -->
-					{#if member.id === board.owner.id}
-						<p class="ml-auto text-xs">Admin</p>
-					{/if}
-
-					{#if $authStore.userDetails.id === board.owner.id && member.id !== board.owner.id}
-						<div class="ml-auto">
-							<!-- DISPAY ONLY TO ADMINS -->
-							<Button color="red" outline={true} size="xs">Remove</Button>
-						</div>
-					{/if}
-				</div>
+				<TeamMember {member} {board} />
 			{/each}
 		{/if}
 	{:else}

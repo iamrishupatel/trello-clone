@@ -1,10 +1,15 @@
 import { ANON_USER_DATA } from '$lib/constants/app.constans';
 import { authStore } from '$lib/store';
 import type { AuthState, UserDetails } from '$lib/types/authStore';
-import type { Board } from '$lib/types/board';
+import type { Board, BoardMember } from '$lib/types/board';
 import type { User } from '$lib/types/user';
+import type { Models } from 'appwrite';
 
-export const enhanceBoardData = (board: any, bulkUsers: User[]): Board => {
+export const enhanceBoardData = (
+	board: any,
+	bulkUsers: User[],
+	teamMembers?: Models.Membership[],
+): Board => {
 	let currentUser: UserDetails | undefined;
 
 	authStore.subscribe((authStore: AuthState) => {
@@ -24,6 +29,7 @@ export const enhanceBoardData = (board: any, bulkUsers: User[]): Board => {
 		labels: [],
 		description: board.description ?? '',
 		createdAt: board.$createdAt,
+		teamId: board.teamId,
 	};
 
 	// ADD SOME LABELS TO THE BOARD
@@ -41,16 +47,17 @@ export const enhanceBoardData = (board: any, bulkUsers: User[]): Board => {
 		});
 	}
 
-	// map the users wuth their data
-	boardData.members = board.members.map((member: string) => {
-		const user = bulkUsers.find((userData) => userData.id === member);
+	// populate the board members list
+	if (teamMembers?.length) {
+		boardData.members = teamMembers.map(({ userId, $id }: Models.Membership) => {
+			const user = bulkUsers.find((userData) => userData.id === userId);
 
-		if (user) {
-			return user;
-		}
-
-		return member;
-	});
+			return {
+				...user,
+				membershipId: $id,
+			};
+		}) as BoardMember[];
+	}
 
 	return boardData;
 };
