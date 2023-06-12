@@ -5,16 +5,17 @@ import type {
 	CreateNewBoardFunc,
 	GetAllBoardFun,
 } from '$types/board';
-import { db, storage } from './client';
+import { db, storage, teams } from './client';
 import { v4 as uuidv4 } from 'uuid';
 import APPWRITE_CONST from '$constants/appwrite.constants';
-import { Permission, Query, Role } from 'appwrite';
+import { Permission, Query, Role, type Models } from 'appwrite';
 import boardStore from '$store/boards.store';
 import toast from 'svelte-french-toast';
 import type { BoardDescriptionFormValues } from '$types/formValues';
 import TEXT from '$constants/text.constants';
 import { getBulkUserData } from './userDetails.api';
 import { enhanceBoardData } from '$transformers/board.transformer';
+import { APP_URL } from '$lib/constants/app.constans';
 
 const { KRELLO_DB_ID, BOARDS_COLLECTION_ID } = APPWRITE_CONST;
 
@@ -48,12 +49,22 @@ export const createNewBoard: CreateNewBoardFunc = async (data, isAnonymous, hanl
 			members: isAnonymous ? [] : [data.owner],
 			...(coverURL && { coverURL }),
 			description: TEXT.DEFAULT_BOARD_DESCRIPTION,
+			teamId: '', // this should be updated when a new team is created in this process
 		};
 
 		const permissions: string[] = [];
 		if (boardCreationPayload.isPrivate) {
-			permissions.push(Permission.read(Role.user(data.owner)));
-			permissions.push(Permission.update(Role.user(data.owner)));
+			// create a new team;
+			// FIXME: fix this and promp user and ask for name.
+			// or we can use the existing teams of the user
+			const teamId = uuidv4();
+			await teams.create(teamId, `${boardCreationPayload.name.substring(0, 90)}'s TEAM`);
+
+			// update the team Id in the board creation payload
+			boardCreationPayload.teamId = teamId;
+
+			permissions.push(Permission.read(Role.team(teamId)));
+			permissions.push(Permission.update(Role.team(teamId)));
 			permissions.push(Permission.delete(Role.user(data.owner)));
 		} else {
 			permissions.push(Permission.read('any'));
@@ -95,6 +106,7 @@ export const createNewBoard: CreateNewBoardFunc = async (data, isAnonymous, hanl
 			labels: [],
 			description: '',
 			createdAt: boardDoc.$createdAt,
+			teamId: boardDoc.teamId,
 		};
 
 		if (!isAnonymous && userDoc) {
@@ -103,6 +115,7 @@ export const createNewBoard: CreateNewBoardFunc = async (data, isAnonymous, hanl
 				displayPicture: userDoc.displayPicture,
 				email: userDoc.email,
 				id: userDoc.$id,
+				membershipId: '', // TODO:
 			});
 			newBoard.labels?.push({
 				color: 'indigo',
@@ -157,14 +170,8 @@ export const getAllBoards: GetAllBoardFun = async (userId, lastId, limit) => {
 		getBulkUserData(),
 	]);
 
-	// filter the boards
-	// which are not public or owned by the logged in user
-	const filteredDocs = documents.filter((item): boolean => {
-		return item.members.includes(userId) || !item.isPrivate;
-	});
-
 	// transform the boars data return it.
-	const data: Board[] = filteredDocs.map((doc: any) => enhanceBoardData(doc, bulkUsers));
+	const data: Board[] = documents.map((doc: any) => enhanceBoardData(doc, bulkUsers));
 
 	return data;
 };
@@ -175,7 +182,13 @@ export const getBoardData = async (boardId: string): Promise<Board> => {
 		getBulkUserData(),
 	]);
 
-	const boardData = enhanceBoardData(boardDoc, bulkUsers);
+	let memberships: Models.Membership[] = [];
+	if (boardDoc.isPrivate) {
+		memberships = (await teams.listMemberships(boardDoc.teamId, [Query.equal('confirm', true)]))
+			.memberships;
+	}
+
+	const boardData = enhanceBoardData(boardDoc, bulkUsers, memberships);
 
 	return boardData as Board;
 };
@@ -213,29 +226,49 @@ export const updateBoardDescription = async (values: BoardDescriptionFormValues)
 };
 
 export const updateBoardPrivacy = async (board: Board, isPrivate: boolean): Promise<void> => {
-	const memberIds = board.members.map((member) => member.id);
-	const permissions: string[] = [];
-
 	// if we are marking this as private
-	// then only members of this board
+	// then only a certail Team
 	//  should have read and update permissions
-	if (isPrivate) {
-		memberIds.forEach((id) => {
-			permissions.push(Permission.read(Role.user(id)));
-			permissions.push(Permission.update(Role.user(id)));
-		});
-	} else {
-		permissions.push(Permission.read('any'));
-		permissions.push(Permission.update('any'));
-	}
 
-	await db.updateDocument(
-		KRELLO_DB_ID,
-		BOARDS_COLLECTION_ID,
-		board.id,
-		{
-			isPrivate,
-		},
-		permissions,
-	);
+	if (isPrivate) {
+		//if there is no team then create a new team
+		const teamId = board.teamId ? board.teamId : uuidv4();
+		if (!board.teamId) {
+			await teams.create(teamId, `${board.name.substring(0, 90)}'s TEAM`);
+		}
+
+		await db.updateDocument(
+			KRELLO_DB_ID,
+			BOARDS_COLLECTION_ID,
+			board.id,
+			{
+				isPrivate: true,
+				teamId,
+			},
+			[Permission.read(Role.team(teamId)), Permission.update(Role.team(teamId))],
+		);
+	} else {
+		//make it public
+		await db.updateDocument(
+			KRELLO_DB_ID,
+			BOARDS_COLLECTION_ID,
+			board.id,
+			{
+				isPrivate: false,
+			},
+			[Permission.read('any'), Permission.update('any')],
+		);
+	}
+};
+
+export const inviteUserToBoard = async (board: Board, newMemberEmail: string): Promise<void> => {
+	const redirectURL = `${APP_URL}/board/`;
+	await teams.createMembership(board.teamId, ['member'], redirectURL, newMemberEmail);
+};
+
+export const removeMemberFromBoard = async (
+	teamId: string,
+	membershipId: string,
+): Promise<void> => {
+	await teams.deleteMembership(teamId, membershipId);
 };
