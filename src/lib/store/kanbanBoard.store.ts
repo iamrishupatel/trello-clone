@@ -39,6 +39,7 @@ export const addNewTaskInStore = (newTask: Task): void => {
 };
 
 export const updateTask = (updatedTask: Task): void => {
+	console.log('updateTask', updatedTask);
 	kanbanStore.update((prevStore) => {
 		const canUpdate =
 			Object.hasOwn(prevStore.kanbanBoard, updatedTask.prevStatusId) &&

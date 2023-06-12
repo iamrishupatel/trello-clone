@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Badge, Button, Dropzone, Modal, Spinner } from 'flowbite-svelte';
 	import type { Task } from '$types/kanban';
-	import TaskTitle from './TaskTitle.component.svelte';
-	import TaskStatus from './TaskStatus.component.svelte';
-	import TaskDescription from './TaskDescription.component.svelte';
-	import TaskPriority from './TaskPriority.component.svelte';
+	import TaskTitle from './components/TaskTitle.component.svelte';
+	import TaskStatus from './components/TaskStatus.component.svelte';
+	import TaskDescription from './components/TaskDescription.component.svelte';
+	import TaskPriority from './components/TaskPriority.component.svelte';
 	import SelectLabel from '$components/NewTask/SelectLabel.component.svelte';
 	import {
 		addLabelInTask,
@@ -13,16 +13,36 @@
 	} from '$lib/api/appwrite/tasks.api';
 	import type { CardLabel } from '$types/card';
 	import Icon from '@iconify/svelte';
-	import CoverUploader from './CoverUploader.component.svelte';
+	import CoverUploader from './components/CoverUploader.component.svelte';
 	import { Status } from '$enums/Status.enums';
 	import toast from 'svelte-french-toast';
-	import TaskActivity from './TaskActivity.component.svelte';
+	import TaskActivity from './components/TaskActivity.component.svelte';
 	import { onDestroy } from 'svelte';
 	import type { Board } from '$lib/types/board';
 	import boardStore from '$lib/store/boards.store';
+	import { kanbanStore } from '$lib/store';
 
 	export let taskDetails: Task | null,
 		isModalOpen = false;
+
+	const unsubscribe = kanbanStore.subscribe((store) => {
+		store.kanbanBoard;
+
+		// Iterate over each column in the kanban board
+		for (const columnId in store.kanbanBoard) {
+			const columnData = store.kanbanBoard[columnId];
+			const { tasks } = columnData;
+
+			// Iterate over the tasks in the current column
+			for (const task of tasks) {
+				if (task.id === taskDetails?.id) {
+					taskDetails = task;
+				}
+			}
+		}
+	});
+
+	onDestroy(unsubscribe);
 
 	let currentBoard: Board;
 	const unsub = boardStore.subscribe((store) => {
@@ -34,13 +54,25 @@
 	const hanldeAddLabel = async (e: CustomEvent): Promise<void> => {
 		if (!taskDetails) return;
 		const newLabel = e.detail as CardLabel;
-		await addLabelInTask(taskDetails.id, newLabel.id, taskDetails.labels, currentBoard.id);
+		await addLabelInTask(
+			taskDetails.id,
+			newLabel.id,
+			taskDetails.labels,
+			currentBoard.id,
+			taskDetails.status.id,
+		);
 	};
 	const hanldeRemoveLabel = async (e: MouseEvent): Promise<void> => {
 		if (!taskDetails) return;
 
 		const removedLabelId = (e.currentTarget as HTMLButtonElement).id;
-		await removeLabelInTask(taskDetails?.id, removedLabelId, taskDetails.labels, currentBoard.id);
+		await removeLabelInTask(
+			taskDetails?.id,
+			removedLabelId,
+			taskDetails.labels,
+			currentBoard.id,
+			taskDetails.status.id,
+		);
 	};
 
 	// file uploads
@@ -76,7 +108,12 @@
 		coverUplaodStatus = Status.LOADING;
 		try {
 			if (taskDetails && taskDetails.id && imageFile) {
-				await updateTaskCoverUrl(taskDetails?.id, imageFile, currentBoard.id);
+				await updateTaskCoverUrl(
+					taskDetails?.id,
+					imageFile,
+					currentBoard.id,
+					taskDetails.status.id,
+				);
 			}
 			toast.success('Cover updated successfully');
 		} catch (e: any) {
@@ -138,9 +175,9 @@
 			{/if}
 
 			<div class="flex flex-col gap-y-2">
-				<TaskTitle taskId={taskDetails.id} title={taskDetails.title} />
-				<TaskStatus status={taskDetails.status} taskId={taskDetails.id} />
-				<TaskPriority priority={taskDetails.priority} taskId={taskDetails.id} />
+				<TaskTitle {taskDetails} />
+				<TaskStatus {taskDetails} />
+				<TaskPriority {taskDetails} />
 
 				{#if taskDetails.labels.length > 0}
 					<div class="flex mt-2 items-center gap-4">
@@ -171,7 +208,7 @@
 
 			<div class="flex gap-8">
 				<section class="flex-1 flex flex-col gap-y-4">
-					<TaskDescription taskDescription={taskDetails.description} taskId={taskDetails.id} />
+					<TaskDescription {taskDetails} />
 				</section>
 
 				<section class="w-80 flex flex-col gap-4">
@@ -180,7 +217,7 @@
 				</section>
 			</div>
 
-			<TaskActivity taskId={taskDetails.id} />
+			<TaskActivity {taskDetails} />
 		</div>
 	</Modal>
 {/if}

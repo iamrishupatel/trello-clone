@@ -3,12 +3,13 @@
 	import { updateTaskPriority } from '$lib/api/appwrite/tasks.api';
 	import boardStore from '$lib/store/boards.store';
 	import type { Board } from '$lib/types/board';
-	import type { TaskPriority } from '$types/kanban';
+	import type { Task } from '$types/kanban';
 	import { Select } from 'flowbite-svelte';
 	import { onDestroy } from 'svelte';
 
-	export let taskId: string;
-	export let priority: TaskPriority | null;
+	export let taskDetails: Task;
+
+	let priority = taskDetails.priority;
 
 	let currentBoard: Board;
 	const unsub = boardStore.subscribe((store) => {
@@ -26,7 +27,7 @@
 
 	const hanldeChange = async (e: Event): Promise<void> => {
 		const target = e.target as HTMLSelectElement;
-		await updateTaskPriority(taskId, target.value, currentBoard.id);
+		await updateTaskPriority(taskDetails.id, target.value, currentBoard.id, taskDetails.status.id);
 	};
 </script>
 

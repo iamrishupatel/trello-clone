@@ -4,13 +4,18 @@
 	import { updateTaskTitle } from '$lib/api/appwrite/tasks.api';
 	import type { Board } from '$lib/types/board';
 	import boardStore from '$lib/store/boards.store';
+	import type { Task } from '$lib/types/kanban';
 
-	export let taskId: string, title: string;
+	export let taskDetails: Task;
+
+	const taskId = taskDetails.id,
+		title = taskDetails.title;
 
 	let currentBoard: Board;
 	const unsub = boardStore.subscribe((store) => {
 		currentBoard = store.currentBoard as Board;
 	});
+
 	onDestroy(unsub);
 
 	let isEditing = false;
@@ -47,7 +52,13 @@
 	const hanldeTaskTitleChange = (e: Event): void => {
 		const target = e.target as HTMLInputElement;
 
-		const update = updateTaskTitle.bind(null, taskId, target.value, currentBoard.id);
+		const update = updateTaskTitle.bind(
+			null,
+			taskId,
+			target.value,
+			currentBoard.id,
+			taskDetails.status.id,
+		);
 		lodash.debounce(update, 100)();
 	};
 </script>

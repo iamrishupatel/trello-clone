@@ -111,11 +111,13 @@ export const updateTaskTitle = async (
 	taskId: string,
 	taskTitle: string,
 	boardId: string,
+	prevStatusId: string,
 ): Promise<void> => {
 	try {
 		await checkForBoardAccess(boardId);
 		await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskId, {
 			title: taskTitle,
+			prevStatusId,
 		});
 	} catch (e: any) {
 		console.error(e);
@@ -127,11 +129,13 @@ export const updateTaskPriority = async (
 	taskId: string,
 	priority: string,
 	boardId: string,
+	prevStatusId: string,
 ): Promise<void> => {
 	try {
 		await checkForBoardAccess(boardId);
 		await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskId, {
 			priority,
+			prevStatusId,
 		});
 	} catch (e: any) {
 		console.error(e);
@@ -143,11 +147,13 @@ export const updateTaskDescription = async (
 	taskId: string,
 	description: string,
 	boardId: string,
+	prevStatusId: string,
 ): Promise<void> => {
 	try {
 		await checkForBoardAccess(boardId);
 		await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskId, {
 			description,
+			prevStatusId,
 		});
 		toast.success('Task description updated successfully');
 	} catch (e) {
@@ -161,11 +167,13 @@ export const addLabelInTask = async (
 	newLabelId: string,
 	labels: CardLabel[],
 	boardId: string,
+	prevStatusId: string,
 ): Promise<void> => {
 	try {
 		await checkForBoardAccess(boardId);
 		await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskId, {
 			labels: [...labels.map((label) => label.id), newLabelId],
+			prevStatusId,
 		});
 		toast.success('Task updated successfully');
 	} catch (e) {
@@ -179,11 +187,13 @@ export const removeLabelInTask = async (
 	removedLabelId: string,
 	labels: CardLabel[],
 	boardId: string,
+	prevStatusId: string,
 ): Promise<void> => {
 	try {
 		await checkForBoardAccess(boardId);
 		await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskId, {
 			labels: labels.filter((oldLabel) => oldLabel.id !== removedLabelId).map((label) => label.id),
+			prevStatusId,
 		});
 		toast.success('Task updated successfully');
 	} catch (e) {
@@ -196,6 +206,7 @@ export const updateTaskCoverUrl = async (
 	taskDocId: string,
 	cover: string | File,
 	boardId: string,
+	prevStatusId: string,
 ): Promise<string> => {
 	await checkForBoardAccess(boardId);
 	let coverUrl;
@@ -207,6 +218,7 @@ export const updateTaskCoverUrl = async (
 
 	await db.updateDocument(KRELLO_DB_ID, TASK_COLLECTION_ID, taskDocId, {
 		coverUrl,
+		prevStatusId,
 	});
 	return coverUrl;
 };
