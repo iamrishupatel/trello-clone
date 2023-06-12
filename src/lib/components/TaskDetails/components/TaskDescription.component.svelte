@@ -8,9 +8,13 @@
 	import { onDestroy } from 'svelte';
 	import type { Board } from '$lib/types/board';
 	import boardStore from '$lib/store/boards.store';
+	import type { Task } from '$lib/types/kanban';
 
-	export let taskDescription = '',
-		taskId: string;
+	export let taskDetails: Task;
+	let taskDescription = taskDetails.description;
+
+	let markdownContent = taskDetails.description;
+	const taskId = taskDetails.id;
 	let isEditing = false;
 
 	let currentBoard: Board;
@@ -29,13 +33,22 @@
 			description: taskDescription ?? '',
 		},
 		onSubmit: async (values) => {
-			await updateTaskDescription(taskId, values.description, currentBoard.id);
+			await updateTaskDescription(
+				taskId,
+				values.description,
+				currentBoard.id,
+				taskDetails.status.id,
+			);
+
+			markdownContent = values.description;
+			isEditing = false;
 		},
 	});
 
 	const handleCancel = (): void => {
 		form.update((prev) => ({ ...prev, description: taskDescription ?? '' }));
 		isEditing = false;
+		// markdownContent = taskDescription ?? '';
 	};
 </script>
 
@@ -98,7 +111,7 @@
 		</div>
 	</form>
 {:else}
-	<div class={`${styles.markdown} mt-4`}>
-		<SvelteMarkdown source={taskDescription ?? ''} />
+	<div class={`${styles.markdown}`}>
+		<SvelteMarkdown source={markdownContent ?? ''} />
 	</div>
 {/if}

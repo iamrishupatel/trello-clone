@@ -3,11 +3,13 @@
 	import { kanbanStore } from '$lib/store';
 	import boardStore from '$lib/store/boards.store';
 	import type { Board } from '$lib/types/board';
-	import type { TaskStatus } from '$types/kanban';
+	import type { Task, TaskStatus } from '$types/kanban';
 	import { Select } from 'flowbite-svelte';
 	import { onDestroy } from 'svelte';
-	export let taskId: string;
-	export let status: TaskStatus;
+
+	export let taskDetails: Task;
+	let taskId: string = taskDetails.id;
+	let status: TaskStatus = taskDetails.status;
 
 	let currentBoard: Board;
 

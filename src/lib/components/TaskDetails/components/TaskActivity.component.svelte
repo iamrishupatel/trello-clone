@@ -12,7 +12,7 @@
 	import type { CommentDoc } from '$types/appwriteDocs.types';
 	import type { AuthState, UserDetails } from '$types/authStore';
 	import type { CreateCommentFormValues } from '$types/formValues';
-	import type { CommentType } from '$types/kanban';
+	import type { CommentType, Task } from '$types/kanban';
 	import { createCommentValidationSchema } from '$lib/validations/task.validations';
 	import Icon from '@iconify/svelte';
 	import { Avatar, Helper, Spinner } from 'flowbite-svelte';
@@ -20,7 +20,8 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { createForm } from 'svelte-forms-lib';
 
-	export let taskId: string;
+	export let taskDetails: Task;
+	let taskId = taskDetails.id;
 
 	let userDetails: UserDetails = $authStore.userDetails;
 	let isAnonymous: boolean = $authStore.isAnonymous;
