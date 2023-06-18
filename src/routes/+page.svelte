@@ -35,7 +35,7 @@
 			<section class="mt-8">
 				<Masonry gridGap={'1rem'} colWidth={'22rem'} items={boards}>
 					{#each boards as board}
-						<div>
+						<div class="w-80">
 							<Card
 								cardTitle={board.name}
 								thumbnailURL={board.coverURL}

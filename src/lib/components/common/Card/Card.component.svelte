@@ -4,6 +4,7 @@
 	import type { CardLabel, CardUserData } from '$types/card';
 	import type { TaskPriority } from '$types/kanban';
 	import { createEventDispatcher } from 'svelte';
+	import classNames from 'classnames';
 
 	//props
 	export let cardTitle = '',
@@ -12,7 +13,8 @@
 		users: CardUserData[] = [],
 		href = '',
 		draggable = false,
-		priority: TaskPriority | null = null;
+		priority: TaskPriority | null = null,
+		cardClass = '';
 	//props end
 
 	const dispatch = createEventDispatcher();
@@ -21,7 +23,9 @@
 	};
 </script>
 
-<article class="p-4 shadow flex flex-col gap-y-4 rounded-xl w-80">
+<article
+	class={classNames('p-4 shadow flex flex-col gap-y-4 rounded-lg w-full min-w-80', cardClass)}
+>
 	<!-- IMAGE -->
 	{#if thumbnailURL}
 		<!-- FIXME:  -->

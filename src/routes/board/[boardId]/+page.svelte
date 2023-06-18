@@ -131,7 +131,7 @@
 				</div>
 			{:else}
 				<title>{`${boardData.name ?? ''} | Krello`}</title>
-				<header class="flex items-center px-4 md:px-10 my-4 gap-x-4">
+				<header class="flex items-center px-4 md:px-10 h-16 gap-x-4">
 					<BoardPrivacy />
 
 					<Members {boardData} />
