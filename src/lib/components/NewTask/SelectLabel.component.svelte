@@ -6,7 +6,7 @@
 	import { createLabelFormSchema } from '$lib/validations/task.validations';
 	import Icon from '@iconify/svelte';
 	import { Input, Badge, Label, Radio, Spinner, Helper } from 'flowbite-svelte';
-	import { createEventDispatcher, onDestroy } from 'svelte';
+	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 	import { createForm } from 'svelte-forms-lib';
 
 	export let selectedLabels: CardLabel[] = [];
@@ -15,8 +15,6 @@
 	const unsub = boardStore.subscribe((store) => {
 		availableLabels = store.labels;
 	});
-
-	onDestroy(unsub);
 
 	const dispatch = createEventDispatcher();
 	const hanldeSelectLabel = (e: MouseEvent): void => {
@@ -46,9 +44,27 @@
 			handleReset();
 		},
 	});
+
+	let labelEl: HTMLDivElement;
+
+	function handleClickAway(event: Event): void {
+		const target = event.target as HTMLElement;
+		if (labelEl && !labelEl.contains(target)) {
+			isDropdownOpen = false;
+		}
+	}
+
+	onMount(() => {
+		window.addEventListener('click', handleClickAway);
+	});
+
+	onDestroy(() => {
+		window.removeEventListener('click', handleClickAway);
+		unsub();
+	});
 </script>
 
-<div class="relative">
+<div class="relative" bind:this={labelEl}>
 	<button
 		type="button"
 		on:click={hanldeClick}
