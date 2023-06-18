@@ -126,7 +126,7 @@
 		<p class="capitalize">
 			{title}
 
-			<Badge rounded color="purple">{tasks.length}</Badge>
+			<Badge rounded color="dark">{tasks.length}</Badge>
 		</p>
 	</div>
 
