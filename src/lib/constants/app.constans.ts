@@ -4,6 +4,7 @@ import { PUBLIC_APP_URL } from '$env/static/public';
 
 export const DEFAULT_BOARDS_PAGINATION_LIMIT = 100;
 export const APP_URL = PUBLIC_APP_URL ?? 'http://localhost:3000';
+export const APP_CONFIG_CONTEXT_KEY = 'app-config-context-key';
 
 export const ANON_USER_DATA = {
 	isAnonymous: true,
