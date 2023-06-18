@@ -68,8 +68,7 @@
 	<button
 		type="button"
 		on:click={hanldeClick}
-		class="relative border w-full flex items-center px-3 py-2 rounded-lg z-0"
-		id="bell"
+		class="relative border border-gray-300 w-full flex items-center px-3 py-2 rounded-lg z-0 hover:bg-gray-100"
 	>
 		{#if selectedLabels.length > 0}
 			<div class="flex flex-wrap gap-2">

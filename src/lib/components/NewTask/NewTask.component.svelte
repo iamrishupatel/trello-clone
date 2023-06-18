@@ -162,9 +162,9 @@
 		{/if}
 
 		<!-- details -->
-		<div class="details-container mt-8">
+		<div class="flex gap-x-4 mt-8">
 			<!-- title and description -->
-			<section class="flex flex-col gap-y-4">
+			<section class="flex flex-1 flex-col gap-y-4">
 				<div>
 					<Label>Task Title</Label>
 					<Input
@@ -202,7 +202,7 @@
 				</div>
 			</section>
 
-			<section class="flex flex-col gap-4">
+			<section class="flex flex-col gap-4 w-80">
 				<div>
 					<Label>Status</Label>
 					<Select
@@ -264,11 +264,3 @@
 		</div>
 	</form>
 </Modal>
-
-<style lang="scss">
-	.details-container {
-		display: grid;
-		grid-template-columns: 2fr 1fr;
-		column-gap: 2rem;
-	}
-</style>
