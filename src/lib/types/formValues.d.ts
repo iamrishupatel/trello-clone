@@ -23,6 +23,7 @@ export type EditProfileValues = {
 export type BoardDescriptionFormValues = {
 	id: string;
 	description: string;
+	textContent: string;
 };
 
 export type CreateNewTasksFormValues = {

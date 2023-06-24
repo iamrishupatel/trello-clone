@@ -14,4 +14,7 @@ export const boardDescriptionFormSchema = Yup.object().shape({
 	description: Yup.string()
 		.required('Please enter a description')
 		.max(5000, 'Description  cannot be longer than 5000 characters'),
+	textContent: Yup.string()
+		.required('Please enter a description')
+		.max(5000, 'Description  cannot be longer than 5000 characters'),
 });

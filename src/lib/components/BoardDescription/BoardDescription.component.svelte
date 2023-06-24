@@ -3,17 +3,7 @@
 	import boardStore from '$lib/store/boards.store';
 	import type { Board, BoardStore } from '$types/board';
 	import Icon from '@iconify/svelte';
-	import {
-		Avatar,
-		Badge,
-		Button,
-		CloseButton,
-		Helper,
-		Label,
-		Spinner,
-		Textarea,
-		Tooltip,
-	} from 'flowbite-svelte';
+	import { Avatar, Badge, Button, CloseButton, Helper, Spinner, Tooltip } from 'flowbite-svelte';
 	import { onDestroy } from 'svelte';
 	import { createForm } from 'svelte-forms-lib';
 	import SvelteMarkdown from 'svelte-markdown';
@@ -23,6 +13,8 @@
 	import { authStore } from '$lib/store';
 	import { boardDescriptionFormSchema } from '$lib/validations/board.validations';
 	import TeamMember from './TeamMember.component.svelte';
+	import type { RichTextEditorChangeEventData } from '$lib/types/app.types';
+	import RichTextEditor from '$components/common/RichTextEditor.component.svelte';
 
 	export let isMenuClosed: boolean;
 
@@ -39,9 +31,10 @@
 	let initialValues: BoardDescriptionFormValues = {
 		id: $boardStore.currentBoard?.id ?? '',
 		description: $boardStore.currentBoard?.description ?? '',
+		textContent: $boardStore.currentBoard?.description ?? '',
 	};
 
-	const { form, errors, isSubmitting, handleChange, handleSubmit } = createForm({
+	const { form, errors, isSubmitting, handleSubmit } = createForm({
 		initialValues,
 		onSubmit: async (values) => {
 			await updateBoardDescription(values);
@@ -64,6 +57,15 @@
 		// handleReset();
 		form.update((prev) => ({ ...prev, description: $boardStore.currentBoard?.description ?? '' }));
 		isEditing = false;
+	};
+
+	const handleDescriptionChange = (e: CustomEvent): void => {
+		const data = e.detail as RichTextEditorChangeEventData;
+		form.update((prev) => ({
+			...prev,
+			description: data.html ?? '',
+			textContent: data.text.trim(),
+		}));
 	};
 </script>
 
@@ -121,28 +123,21 @@
 			</Button>
 		{/if}
 	</div>
-
 	<!-- DESCRIPTION FORM -->
 	{#if isEditing}
 		<form on:submit={handleSubmit}>
-			<Label for="board-description" class="sr-only">Add a description</Label>
-			<Textarea
-				id="board-description"
-				placeholder="Add a description."
-				rows={20}
-				name="description"
-				bind:value={$form.description}
-				on:change={handleChange}
-				class={$errors.description
-					? 'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400'
-					: ''}
+			<RichTextEditor
+				bind:markdownContent={$form.description}
+				on:change={handleDescriptionChange}
 			/>
 
-			<Helper color={$errors.description ? 'red' : 'gray'}>
-				<span class="font-medium">
-					{$errors.description ? $errors.description : 'Use mardown format.'}
-				</span>
-			</Helper>
+			{#if $errors.description || $errors.textContent}
+				<Helper color="red">
+					<span class="font-medium">
+						{$errors.description ? $errors.description : $errors.textContent}
+					</span>
+				</Helper>
+			{/if}
 
 			<div class="flex items-center gap-x-4 mt-2">
 				<Button color="green" type="submit" size="sm" disabled={$isSubmitting}>
