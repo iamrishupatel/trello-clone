@@ -18,10 +18,11 @@
 		[{ color: [] }, { background: [] }], // dropdown with defaults from theme
 	];
 
+	let quill: any;
 	onMount(async () => {
 		const { default: Quill } = await import('quill');
 
-		let quill = new Quill(node, {
+		quill = new Quill(node, {
 			modules: {
 				syntax: true,
 				toolbar: toolbarOptions,
@@ -43,6 +44,13 @@
 				text: quill.getText().trim(),
 			});
 		});
+		const toolbar = document.querySelector('.ql-toolbar') as HTMLDivElement;
+		const editor = document.querySelector('.ql-container') as HTMLDivElement;
+
+		toolbar.style.borderTopLeftRadius = '8px';
+		toolbar.style.borderTopRightRadius = '8px';
+		editor.style.borderBottomLeftRadius = '8px';
+		editor.style.borderBottomRightRadius = '8px';
 	});
 
 	onDestroy(() => {
@@ -55,6 +63,17 @@
 			}
 		}
 	});
+
+	const focusOnQuill = (): void => {
+		if (quill) {
+			quill.focus();
+		}
+	};
 </script>
 
-<div class="editor min-h-[100px] max-h-[400px] overflow-y-auto" bind:this={node} />
+<div
+	class="editor min-h-[200px] max-h-[400px] overflow-y-auto text-base"
+	bind:this={node}
+	on:click={focusOnQuill}
+	on:keydown={focusOnQuill}
+/>
