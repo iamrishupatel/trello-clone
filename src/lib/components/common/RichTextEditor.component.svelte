@@ -19,8 +19,6 @@
 	];
 
 	onMount(async () => {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
 		const { default: Quill } = await import('quill');
 
 		let quill = new Quill(node, {
@@ -30,25 +28,6 @@
 			},
 			theme: 'snow',
 			...options,
-		});
-
-		quill.clipboard.addMatcher(Node.ELEMENT_NODE, function (_node: HTMLDivElement, delta: any) {
-			delta.forEach((e: any) => {
-				if (e.attributes) {
-					e.attributes.color = '';
-					e.attributes.background = '';
-				}
-			});
-			quill.clipboard.addMatcher(Node.ELEMENT_NODE, function (_node: any, delta: any) {
-				delta.forEach((e: any) => {
-					if (e.attributes) {
-						e.attributes.color = '';
-						e.attributes.background = '';
-					}
-				});
-				return delta;
-			});
-			return delta;
 		});
 
 		if (markdownContent) {
@@ -67,9 +46,6 @@
 	});
 
 	onDestroy(() => {
-		if (node) {
-			// node.removeEventListener('text-change', handleTextChange);
-		}
 		if (browser && document) {
 			const els = document.querySelectorAll('div[class^=\'ql-\']');
 			for (const el of els) {
