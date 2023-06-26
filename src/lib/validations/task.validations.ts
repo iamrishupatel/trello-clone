@@ -21,6 +21,9 @@ export const createCommentValidationSchema = Yup.object().shape({
 	body: Yup.string()
 		.required('Please enter a comment')
 		.max(9000, 'Comment cannot be longer than 9000 characters'),
+	_bodyText: Yup.string()
+		.required('Please enter a comment')
+		.max(9000, 'Comment cannot be longer than 9000 characters'),
 });
 
 export const updateCommentValidationSchema = Yup.object().shape({

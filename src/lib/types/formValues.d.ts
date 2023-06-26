@@ -42,5 +42,6 @@ export type CreateNewLabelFormValues = {
 
 export type CreateCommentFormValues = {
 	body: string;
+	_bodyText: string;
 	authorId: string;
 };

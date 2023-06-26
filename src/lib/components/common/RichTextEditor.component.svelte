@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import classNames from 'classnames';
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 
 	export let options = { placeholder: 'Anything goes here...' };
 	export let markdownContent = '';
+	export let height = 200,
+		maxHeight = 400;
 
 	let node: HTMLDivElement;
 
@@ -20,8 +23,9 @@
 
 	let quill: any;
 	onMount(async () => {
-		const { default: Quill } = await import('quill');
-
+		// @ts-ignore: Do not use "@ts-ignore"
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore: 'Quill' is not defined
 		quill = new Quill(node, {
 			modules: {
 				syntax: true,
@@ -55,7 +59,7 @@
 
 	onDestroy(() => {
 		if (browser && document) {
-			const els = document.querySelectorAll('div[class^=\'ql-\']');
+			const els = document.querySelectorAll("div[class^='ql-']");
 			for (const el of els) {
 				if (el.parentNode !== null) {
 					el.parentNode.removeChild(el);
@@ -69,10 +73,18 @@
 			quill.focus();
 		}
 	};
+
+	export const resetEditor = (): void => {
+		if (quill) {
+			quill.setText('');
+		}
+	};
 </script>
 
 <div
-	class="editor min-h-[200px] max-h-[400px] overflow-y-auto text-base"
+	class={classNames(
+		`editor font-body h-[${height}px] max-h-[${maxHeight}px] overflow-y-auto text-base`,
+	)}
 	bind:this={node}
 	on:click={focusOnQuill}
 	on:keydown={focusOnQuill}
