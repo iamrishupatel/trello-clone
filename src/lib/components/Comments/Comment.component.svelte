@@ -38,7 +38,11 @@
 	const openCommentEditor = (): void => {
 		isEditingComment = true;
 	};
-	const closeCommentEditor = (): void => {
+	const closeCommentEditor = (e: CustomEvent): void => {
+		comment = {
+			...comment,
+			body: e.detail,
+		};
 		isEditingComment = false;
 	};
 </script>
