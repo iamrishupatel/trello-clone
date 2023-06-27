@@ -1,12 +1,9 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import classNames from 'classnames';
 	import { createEventDispatcher, onMount } from 'svelte';
 
 	export let options = { placeholder: 'Anything goes here...' };
 	export let markdownContent = '';
-	export let height = 200,
-		maxHeight = 400;
 
 	let node: HTMLDivElement;
 
@@ -72,9 +69,7 @@
 </script>
 
 <div
-	class={classNames(
-		`editor font-body h-[${height}px] max-h-[${maxHeight}px] overflow-y-auto text-base`,
-	)}
+	class={classNames(`editor font-body overflow-y-auto text-base`)}
 	bind:this={node}
 	on:click={focusOnQuill}
 	on:keydown={focusOnQuill}

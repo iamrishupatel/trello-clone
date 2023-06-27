@@ -126,10 +126,12 @@
 	<!-- DESCRIPTION FORM -->
 	{#if isEditing}
 		<form on:submit={handleSubmit}>
-			<RichTextEditor
-				bind:markdownContent={$form.description}
-				on:change={handleDescriptionChange}
-			/>
+			<div class="flex flex-col h-96">
+				<RichTextEditor
+					bind:markdownContent={$form.description}
+					on:change={handleDescriptionChange}
+				/>
+			</div>
 
 			{#if $errors.description || $errors.textContent}
 				<Helper color="red">
