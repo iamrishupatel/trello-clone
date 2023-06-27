@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import classNames from 'classnames';
-	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 
 	export let options = { placeholder: 'Anything goes here...' };
 	export let markdownContent = '';
@@ -48,6 +48,7 @@
 				text: quill.getText().trim(),
 			});
 		});
+
 		const toolbar = document.querySelector('.ql-toolbar') as HTMLDivElement;
 		const editor = document.querySelector('.ql-container') as HTMLDivElement;
 
@@ -55,17 +56,6 @@
 		toolbar.style.borderTopRightRadius = '8px';
 		editor.style.borderBottomLeftRadius = '8px';
 		editor.style.borderBottomRightRadius = '8px';
-	});
-
-	onDestroy(() => {
-		if (browser && document) {
-			const els = document.querySelectorAll("div[class^='ql-']");
-			for (const el of els) {
-				if (el.parentNode !== null) {
-					el.parentNode.removeChild(el);
-				}
-			}
-		}
 	});
 
 	const focusOnQuill = (): void => {
