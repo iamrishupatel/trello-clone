@@ -43,7 +43,7 @@
 	{#if cardTitle}
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<h5
-			class="textxl font-bold tracking-tight text-gray-900 dark:text-white break-all cursor-pointer"
+			class="textxl font-bold tracking-tight text-gray-900 dark:text-white break-words cursor-pointer"
 			on:click={hanldeTitleClick}
 		>
 			{#if href}
