@@ -2,8 +2,6 @@
 	import Icon from '@iconify/svelte';
 	import { Button, Helper, Label, Spinner } from 'flowbite-svelte';
 	import { createForm } from 'svelte-forms-lib';
-	import styles from '$sass/markdown.module.scss';
-	import SvelteMarkdown from 'svelte-markdown';
 	import { updateTaskDescription } from '$lib/api/appwrite/tasks.api';
 	import { onDestroy } from 'svelte';
 	import type { Board } from '$lib/types/board';
@@ -11,6 +9,7 @@
 	import type { Task } from '$lib/types/kanban';
 	import RichTextEditor from '$components/common/RichTextEditor.component.svelte';
 	import type { RichTextEditorChangeEventData } from '$lib/types/app.types';
+	import RichTextViewer from '$components/common/RichTextViewer.component.svelte';
 
 	export let taskDetails: Task;
 	let taskDescription = taskDetails.description;
@@ -116,7 +115,5 @@
 		</div>
 	</form>
 {:else}
-	<div class={`${styles.markdown}`}>
-		<SvelteMarkdown source={taskDescription ?? ''} />
-	</div>
+	<RichTextViewer source={taskDescription ?? ''} />
 {/if}

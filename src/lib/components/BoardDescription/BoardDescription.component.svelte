@@ -1,12 +1,10 @@
 <script lang="ts">
-	import styles from './markdown.module.scss';
 	import boardStore from '$lib/store/boards.store';
 	import type { Board, BoardStore } from '$types/board';
 	import Icon from '@iconify/svelte';
 	import { Avatar, Badge, Button, CloseButton, Helper, Spinner, Tooltip } from 'flowbite-svelte';
 	import { onDestroy } from 'svelte';
 	import { createForm } from 'svelte-forms-lib';
-	import SvelteMarkdown from 'svelte-markdown';
 	import moment from 'moment';
 	import type { BoardDescriptionFormValues } from '$types/formValues';
 	import { updateBoardDescription } from '$lib/api/appwrite/boards.api';
@@ -15,6 +13,7 @@
 	import TeamMember from './TeamMember.component.svelte';
 	import type { RichTextEditorChangeEventData } from '$lib/types/app.types';
 	import RichTextEditor from '$components/common/RichTextEditor.component.svelte';
+	import RichTextViewer from '$components/common/RichTextViewer.component.svelte';
 
 	export let isMenuClosed: boolean;
 
@@ -154,9 +153,7 @@
 			</div>
 		</form>
 	{:else if $form.description}
-		<div class={styles.markdown}>
-			<SvelteMarkdown source={$boardStore.currentBoard?.description ?? ''} />
-		</div>
+		<RichTextViewer source={$boardStore.currentBoard?.description ?? ''} />
 	{:else}
 		<p>No description found. Please add one</p>
 	{/if}
