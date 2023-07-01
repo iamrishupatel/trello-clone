@@ -29,7 +29,7 @@ async function loadPageData(): Promise<ReturnType> {
 		}));
 	} catch (e) {
 		// handle Errors
-		console.log('ee');
+		console.log(e);
 	}
 
 	return {

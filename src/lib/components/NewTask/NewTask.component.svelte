@@ -8,20 +8,12 @@
 	import type { CreateNewTasksFormValues } from '$types/formValues';
 	import { createTaskFormSchema } from '$lib/validations/task.validations';
 	import Icon from '@iconify/svelte';
-	import {
-		Button,
-		Dropzone,
-		Helper,
-		Input,
-		Label,
-		Modal,
-		Select,
-		Spinner,
-		Textarea,
-	} from 'flowbite-svelte';
+	import { Button, Dropzone, Helper, Input, Label, Modal, Select, Spinner } from 'flowbite-svelte';
 	import type { ButtonColorType } from 'flowbite-svelte/dist/types';
 	import { onDestroy } from 'svelte';
 	import { createForm } from 'svelte-forms-lib';
+	import RichTextEditor from '$components/common/RichTextEditor.component.svelte';
+	import type { RichTextEditorChangeEventData } from '$lib/types/app.types';
 
 	export let defaultStatusId = '';
 	export let color: ButtonColorType = 'primary';
@@ -125,6 +117,15 @@
 		handleReset();
 		isModalOpen = false;
 	};
+
+	const handleEditorChange = (e: CustomEvent): void => {
+		const data = e.detail as RichTextEditorChangeEventData;
+
+		form.update((prev) => ({
+			...prev,
+			description: data.text.trim().length === 0 ? '' : data.html ?? '',
+		}));
+	};
 </script>
 
 <Button
@@ -182,18 +183,17 @@
 				</div>
 
 				<div>
-					<Label>Task Description</Label>
-					<Textarea
-						id="description"
-						name="description"
-						rows={20}
-						placeholder="Enter description"
-						bind:value={$form.description}
-						on:change={handleChange}
-						class={$errors.description
-							? 'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400'
-							: ''}
-					/>
+					<div class="flex flex-col h-96">
+						<Label>Task Description</Label>
+						<RichTextEditor
+							options={{
+								placeholder: 'Enter description.',
+							}}
+							bind:markdownContent={$form.description}
+							on:change={handleEditorChange}
+						/>
+					</div>
+
 					{#if $errors.description}
 						<Helper color="red">
 							<span class="font-medium">{$errors.description}</span>

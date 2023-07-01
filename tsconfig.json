@@ -65,7 +65,8 @@
 		"node_modules/**",
 		"./src/service-worker.js",
 		"./src/service-worker.ts",
-		"./src/service-worker.d.ts"
+		"./src/service-worker.d.ts",
+		"./src/lib/components/common/RichTextEditor.component.svelte"
 	]
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//
