@@ -6,6 +6,7 @@
 	import type { PageData } from './$types';
 	import boardStore from '$lib/store/boards.store';
 	import Masonry from '$components/Layouts/Masonry.component.svelte';
+	import ROUTES from '$lib/constants/routes.constants';
 
 	export let data: PageData;
 	let boards = data.boards;
@@ -24,7 +25,7 @@
 
 <title>All Boards | Krello</title>
 
-<AuthGuard>
+<AuthGuard fallback={ROUTES.LANDING}>
 	<main class="container mx-auto flex flex-col pt-12">
 		<div class="">
 			<header class="flex items-center justify-between gap-2 px-4">
