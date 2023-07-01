@@ -26,6 +26,8 @@
 	onDestroy(unsubscribe);
 </script>
 
+<title>Krello the trello clone | By RLabs</title>
+
 <div class="bg-white">
 	<Header />
 
