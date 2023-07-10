@@ -9,6 +9,8 @@
 	import TaskDetails from '$components/TaskDetails/TaskDetails.component.svelte';
 	import type { Board } from '$lib/types/board';
 	import boardStore from '$lib/store/boards.store';
+	import { Badge } from 'flowbite-svelte';
+	import classNames from 'classnames';
 
 	export let title = '',
 		tasks: Task[] = [],
@@ -18,6 +20,7 @@
 	let showTaskModal = false;
 	let selectedTask: Task | null = null;
 	let currentBoard: Board;
+	let isCurrentColumnHighlighted = false;
 
 	const unsubFromBoardStore = boardStore.subscribe((store) => {
 		currentBoard = store.currentBoard as Board;
@@ -81,29 +84,61 @@
 		 * sync the local store that is updated above
 		 * and display the error message
 		 */
-
+		isCurrentColumnHighlighted = false;
 		await updateTaskStatus(currentCard.id, destinationColumnId, sourceColumnId, currentBoard.id);
 	}
 
 	function allowDrop(event: any): void {
+		isCurrentColumnHighlighted = true;
 		event.preventDefault();
 	}
 
 	const hanldeDragStart = (event: any): void => {
 		event.dataTransfer.setData('cardId', event.target.id);
 		event.dataTransfer.setData('sourceColumnId', columnId);
+		isCurrentColumnHighlighted = true;
+	};
+
+	const hanldeDragEnd = (): void => {
+		isCurrentColumnHighlighted = false;
+	};
+
+	const highlightCurrentColumn = (): void => {
+		isCurrentColumnHighlighted = true;
+	};
+
+	const unHighlightCurrentColumn = (): void => {
+		isCurrentColumnHighlighted = false;
 	};
 </script>
 
-<section class="column overflow-y-auto p-4" on:drop={handleDrop} on:dragover={allowDrop}>
-	<div class="flex items-center justify-between p-4">
-		<p class="capitalize">{title}</p>
-		<Icon icon="tabler:dots" />
+<section
+	class={classNames({
+		'border-2 border-slate-300 rounded-lg bg-slate-200': true,
+		'border-2 border-primary-600': isCurrentColumnHighlighted,
+	})}
+	on:drop={handleDrop}
+	on:dragover={allowDrop}
+	on:dragenter={highlightCurrentColumn}
+	on:dragleave={unHighlightCurrentColumn}
+>
+	<div class="flex items-center justify-between h-12 p-4">
+		<p class="capitalize">
+			{title}
+
+			<Badge rounded color="dark">{tasks.length}</Badge>
+		</p>
 	</div>
 
-	<div class="flex flex-col items-center gap-y-6">
+	<div class="column overflow-y-auto w-full flex flex-1 flex-col items-center gap-y-6 p-2 px-4">
 		{#each tasks as task}
-			<div id={task.id} draggable="true" on:dragstart={hanldeDragStart}>
+			<div
+				id={task.id}
+				draggable="true"
+				class="w-full rounded-lg"
+				on:dragstart={hanldeDragStart}
+				on:dragend={hanldeDragEnd}
+			>
 				<Card
 					cardTitle={task.title}
 					labels={task.labels}
@@ -120,25 +155,34 @@
 				/>
 			</div>
 		{/each}
+	</div>
 
+	<div class="py-2 px-4">
 		<NewTask
 			defaultStatusId={columnId}
-			color="purple"
+			btnClass="w-full flex items-center justify-between"
+			color="dark"
 			outline={true}
-			btnClass="w-[20rem] flex items-center justify-between"
 		>
-			<span class="ml-2">Add another card</span>
-			<Icon icon="material-symbols:add" />
+			<div class="flex items-center">
+				<Icon icon="material-symbols:add" />
+				<span class="ml-2">Add another card</span>
+			</div>
 		</NewTask>
-
-		<TaskDetails bind:isModalOpen={showTaskModal} taskDetails={selectedTask} />
 	</div>
+
+	<TaskDetails bind:isModalOpen={showTaskModal} taskDetails={selectedTask} />
 </section>
 
 <style lang="scss">
 	.column {
-		min-width: 400px;
-		padding-bottom: 2rem;
+		height: calc(100vh - 16rem);
+		@media screen and (max-width: 1400px) {
+			width: 350px;
+		}
+		@media screen and (min-width: 1400px) {
+			width: 400px;
+		}
 
 		&::-webkit-scrollbar {
 			width: 10px;
@@ -146,10 +190,9 @@
 
 		&::-webkit-scrollbar,
 		&::-webkit-scrollbar-thumb {
-			width: 26px;
-			border-radius: 13px;
+			width: 6px;
+			// border-radius: 13px;
 			background-clip: padding-box;
-			border: 10px solid transparent;
 		}
 
 		&::-webkit-scrollbar-thumb {

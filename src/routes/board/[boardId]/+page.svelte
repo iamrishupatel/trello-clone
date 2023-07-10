@@ -123,7 +123,7 @@
 		errorDescription="Sorry, the page you are looking for cannot be found or you do not have permission to view it."
 	/>
 {:else}
-	<AuthGuard>
+	<AuthGuard showBoardNameInNav={true}>
 		<main class="board-page flex flex-col mx-auto px-2 sm:px-0">
 			{#if isboardDataLoading}
 				<div class="min-h-screen flex items-center justify-center -mt-20">
@@ -131,7 +131,7 @@
 				</div>
 			{:else}
 				<title>{`${boardData.name ?? ''} | Krello`}</title>
-				<header class="flex my-4 gap-x-4 container mx-auto">
+				<header class="flex items-center px-4 md:px-10 h-16 gap-x-4">
 					<BoardPrivacy />
 
 					<Members {boardData} />

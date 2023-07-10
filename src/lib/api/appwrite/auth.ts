@@ -167,8 +167,8 @@ export async function createAnonSession(): Promise<void> {
 
 export const handleSignout = async (sessionId: string): Promise<void> => {
 	try {
-		authStore.set(initialAuthStore);
 		await account.deleteSession(sessionId);
+		authStore.set(initialAuthStore);
 		await goto(ROUTES.LOGIN);
 	} catch (e) {
 		console.log(e);

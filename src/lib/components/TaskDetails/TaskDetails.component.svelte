@@ -42,14 +42,10 @@
 		}
 	});
 
-	onDestroy(unsubscribe);
-
 	let currentBoard: Board;
 	const unsub = boardStore.subscribe((store) => {
 		currentBoard = store.currentBoard as Board;
 	});
-
-	onDestroy(unsub);
 
 	const hanldeAddLabel = async (e: CustomEvent): Promise<void> => {
 		if (!taskDetails) return;
@@ -123,6 +119,11 @@
 			coverUplaodStatus = Status.DONE;
 		}
 	};
+
+	onDestroy(() => {
+		unsubscribe();
+		unsub();
+	});
 </script>
 
 {#if taskDetails}

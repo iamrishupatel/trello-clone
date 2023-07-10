@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { Avatar } from 'flowbite-svelte';
-	import SvelteMarkdown from 'svelte-markdown';
-	import styles from '$sass/markdown.module.scss';
 	import moment from 'moment';
 	import type { CommentType } from '$types/kanban';
 	import toast from 'svelte-french-toast';
@@ -10,6 +8,7 @@
 	import type { UserDetails } from '$types/authStore';
 	import { authStore } from '$lib/store';
 	import EditComment from './EditComment.component.svelte';
+	import RichTextViewer from '$components/common/RichTextViewer.component.svelte';
 
 	export let comment: CommentType;
 
@@ -38,7 +37,11 @@
 	const openCommentEditor = (): void => {
 		isEditingComment = true;
 	};
-	const closeCommentEditor = (): void => {
+	const closeCommentEditor = (e: CustomEvent): void => {
+		comment = {
+			...comment,
+			body: e.detail,
+		};
 		isEditingComment = false;
 	};
 </script>
@@ -67,8 +70,8 @@
 			on:closeCommentEditor={closeCommentEditor}
 		/>
 	{:else}
-		<div class={`${styles.markdown} border px-4 bg-gray-50 rounded-lg`}>
-			<SvelteMarkdown source={comment.body ?? ''} />
+		<div class="border px-4 bg-gray-50 rounded-lg">
+			<RichTextViewer source={comment.body ?? ''} />
 		</div>
 		<div class="flex items-center gap-x-2 -mt-2">
 			{#if comment.author.id === userDetails.id || comment.author.isAnonymous === isCurrentUserAnon}

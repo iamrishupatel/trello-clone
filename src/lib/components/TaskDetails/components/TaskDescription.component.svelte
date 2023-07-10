@@ -1,19 +1,20 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import { Button, Helper, Label, Spinner, Textarea } from 'flowbite-svelte';
+	import { Button, Helper, Label, Spinner } from 'flowbite-svelte';
 	import { createForm } from 'svelte-forms-lib';
-	import styles from '$sass/markdown.module.scss';
-	import SvelteMarkdown from 'svelte-markdown';
 	import { updateTaskDescription } from '$lib/api/appwrite/tasks.api';
 	import { onDestroy } from 'svelte';
 	import type { Board } from '$lib/types/board';
 	import boardStore from '$lib/store/boards.store';
 	import type { Task } from '$lib/types/kanban';
+	import RichTextEditor from '$components/common/RichTextEditor.component.svelte';
+	import type { RichTextEditorChangeEventData } from '$lib/types/app.types';
+	import RichTextViewer from '$components/common/RichTextViewer.component.svelte';
 
 	export let taskDetails: Task;
 	let taskDescription = taskDetails.description;
+	let richTextEditor: RichTextEditor;
 
-	let markdownContent = taskDetails.description;
 	const taskId = taskDetails.id;
 	let isEditing = false;
 
@@ -28,7 +29,7 @@
 		isEditing = true;
 	};
 
-	const { form, errors, isSubmitting, handleChange, handleSubmit } = createForm({
+	const { form, errors, isSubmitting, handleSubmit } = createForm({
 		initialValues: {
 			description: taskDescription ?? '',
 		},
@@ -39,8 +40,7 @@
 				currentBoard.id,
 				taskDetails.status.id,
 			);
-
-			markdownContent = values.description;
+			taskDescription = values.description;
 			isEditing = false;
 		},
 	});
@@ -48,7 +48,15 @@
 	const handleCancel = (): void => {
 		form.update((prev) => ({ ...prev, description: taskDescription ?? '' }));
 		isEditing = false;
-		// markdownContent = taskDescription ?? '';
+	};
+
+	const handleEditorChange = (e: CustomEvent): void => {
+		const data = e.detail as RichTextEditorChangeEventData;
+
+		form.update((prev) => ({
+			...prev,
+			description: data.text.trim().length === 0 ? '' : data.html ?? '',
+		}));
 	};
 </script>
 
@@ -78,26 +86,22 @@
 
 {#if isEditing}
 	<form on:submit={handleSubmit}>
-		<div>
+		<div class="flex flex-col h-96">
 			<Label for="board-description" class="sr-only">Add a description</Label>
-			<Textarea
-				id="board-description"
-				placeholder="Add a description."
-				rows={12}
-				name="description"
-				bind:value={$form.description}
-				on:change={handleChange}
-				class={$errors.description
-					? 'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400'
-					: ''}
+			<RichTextEditor
+				options={{
+					placeholder: 'Add a more detailed description',
+				}}
+				bind:markdownContent={$form.description}
+				bind:this={richTextEditor}
+				on:change={handleEditorChange}
 			/>
-
-			<Helper color={$errors.description ? 'red' : 'gray'}>
-				<span class="font-medium">
-					{$errors.description ? $errors.description : 'Use mardown format.'}
-				</span>
-			</Helper>
 		</div>
+		<Helper color="red">
+			<span class="font-medium">
+				{$errors.description}
+			</span>
+		</Helper>
 		<div class="flex items-center gap-x-4 mt-2">
 			<Button color="green" type="submit" size="sm" disabled={$isSubmitting}>
 				{#if $isSubmitting}
@@ -111,7 +115,5 @@
 		</div>
 	</form>
 {:else}
-	<div class={`${styles.markdown}`}>
-		<SvelteMarkdown source={markdownContent ?? ''} />
-	</div>
+	<RichTextViewer source={taskDescription ?? ''} />
 {/if}
