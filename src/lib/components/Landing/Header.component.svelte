@@ -4,13 +4,7 @@
 </script>
 
 <header class="relative">
-	<div
-		class="fixed inset-0 h-10 z-50 flex items-center justify-center gap-x-6 bg-gray-900 px-6 py-2.5 sm:px-3.5"
-	>
-		<p class="leading-6 text-xs sm:text-base text-white">🏆 Winner Appwrite X Hashnode Hackathon</p>
-	</div>
-
-	<nav class="mt-10 flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+	<nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
 		<div class="flex lg:flex-1">
 			<a href={ROUTES.HOME} class="-m-1.5 p-1.5">
 				<span class="sr-only">Krello</span>
