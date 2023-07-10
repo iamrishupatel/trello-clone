@@ -13,6 +13,7 @@ export const PROTECTED_ROUTES = Object.freeze({
 const ROUTES = Object.freeze({
 	...AUTH_ROUTES,
 	...PROTECTED_ROUTES,
+	LANDING: '/landing',
 });
 
 export default ROUTES;

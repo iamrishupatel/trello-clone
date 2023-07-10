@@ -8,7 +8,7 @@
 	import { redirect } from '@sveltejs/kit';
 	import { onDestroy, setContext } from 'svelte';
 
-	export let fallback = AUTH_ROUTES.LOGIN;
+	export let fallback: string = AUTH_ROUTES.LOGIN;
 	export let showBoardNameInNav = false;
 	export let showSearch = false;
 
