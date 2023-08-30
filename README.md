@@ -75,6 +75,8 @@ pnpm install
 
 **D. Add following attributes in the tables**
 
+> **Note: Appwrite cloud uses apprite v1.1.2 as of AUG 2023 and doesn't support relations**
+
 6. User Collection Attributes
 
    | Key                      |  Type  | Default Value |
