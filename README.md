@@ -73,6 +73,9 @@ pnpm install
 4. Create a database
 5. Create 7 collections - (user, board, label, priority, status, task, comment)
 
+> **Note: Don't forget to update the collection permissions so authorized users are allowed to update collections. This also is required to create users in the user collection. For more information about 
+Appwrite collection permissions see their [documentation](https://appwrite.io/docs/products/databases/permissions)**
+
 **D. Add following attributes in the tables**
 
 > **Note: Appwrite cloud uses apprite v1.1.2 as of AUG 2023 and doesn't support relations**
