@@ -78,7 +78,7 @@ Appwrite collection permissions see their [documentation](https://appwrite.io/do
 
 **D. Add following attributes in the tables**
 
-> **Note: Appwrite cloud uses apprite v1.1.2 as of AUG 2023 and doesn't support relations**
+> Note: Set each attribute to be size 1024 bytes in order to accomodate the strings submitted in each field, otherwise user submissions will fail when the API call is made.
 
 6. User Collection Attributes
 
